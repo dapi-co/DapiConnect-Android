@@ -8,14 +8,14 @@ Financial APIs to connect users' bank accounts
 
 ### Introduction
 
-Dapi for Android is a prebuilt SDK that aims to ease and reduce the time it takes to gain access to your users financial data.
+Dapi for Android is a prebuilt SDK that reduces the time it takes to integrate with Dapi's API and gain access to your users financial data.
 
-The SDK provides direct access to Dapi endpoints, and also offers additoinal UI to manage accounts, subaccounts, balance and money transfer.
+The SDK provides direct access to Dapi endpoints and offers optional UI to manage users' accounts, subaccounts, balance and money transfer.
 
 ### Requirement
 
-- minSdkVersion 23.
-- App key; Can be obtained from the [Dapi Dashboard](https://dashboard.dapi.co/).
+- minSdkVersion 23
+- App key (obtain from [Dapi Dashboard](https://dashboard.dapi.co/))
 
 ## Integration
 
@@ -28,14 +28,14 @@ dependencies {
 
 ## How it Works
 
-Dapi SDK commincates to endpoints to make network requests. At the end, requests goes to Dapi servers. However, requests do NOT go to Dapi servers directly. Instead, requests go to your server first, and then go to Dapi servers. See the example gif below.
+DapiConnect SDK communicates with API endpoints to make network requests. Requests do NOT go to Dapi servers directly. Instead, requests first go to your server and then to Dapi servers. See the example gif below:
 > *(don't worry, we also have an [SDK for your server](https://github.com/dapi-co/sdk-server))*
 
 ![dfd](https://github.com/dapi-co/DapiConnect-iOS/raw/master/DapiConnectGIF.gif)
 
-As we can see here, the example request `sendMoney(amount:)` goes first to your server, and then goes to Dapi servers. This is a security feature that keeps control in your hands. Your server is responsible for maintaing access tokens (create, store and refresh).
+This is a security feature that keeps control in your hands. Your server is responsible for maintaining access tokens by creating, storing, and refreshing them.
 
-## Usage
+## Integration
 
 1. Initialize the SDK in your Application class
 
@@ -61,11 +61,11 @@ As we can see here, the example request `sendMoney(amount:)` goes first to your 
 
 	You can get your app key [from here](https://dashboard.dapi.co/)
 
-2. Only if you're not using the SDK-Server
+2. If you're NOT using the SDK-Server:
 
 	We provide an SDK for your server so Dapi-Android can talk to it. By default, Dapi-Android talks to the endpoints specified in [Dapi docs](https://docs.dapi.co/). 
 
-	If your custom implementation in your server exposes different endpoint naming than the mentioned in [Dapi docs](https://docs.dapi.co/), you'll need to pass the endpoints to `DapiConfig`'s `dapiEndpoints` property.
+	If your server's custom implementation uses different endpoint naming than those mentioned in [Dapi docs](https://docs.dapi.co/), you'll need to pass the endpoints to `DapiConfig`'s `dapiEndpoints` property.
 
 
 ## Components
@@ -73,7 +73,7 @@ As we can see here, the example request `sendMoney(amount:)` goes first to your 
 
 1. Connect
 
-	Responsible for showing list of banks, credentials input, authorization and authentication. You can receive callbacks by implementing `OnDapiConnectListener` interface.
+	Responsible for showing credential input, authorization, authentication and a list of banks. You can receive callbacks by implementing `OnDapiConnectListener` interface.
 
 	```kotlin
 	Dapi.displayConnect()
@@ -95,7 +95,7 @@ As we can see here, the example request `sendMoney(amount:)` goes first to your 
 
 2. Payment
 
-	You can either use autoflow in which we display the connected accounts, balance for each subaccount and a numpad to make a transaction.
+	You can use autoflow to display the connected accounts, balance for each subaccount and a numpad to make a transaction.
 
 	```kotlin
 	Dapi.displayPayment()
@@ -115,7 +115,7 @@ As we can see here, the example request `sendMoney(amount:)` goes first to your 
 	})
 	```
 
-	Or you can use our functions separately and build your own flow and UI.
+	OR you can use our functions separately and build your own flow and UI.
 
 	For example
 
