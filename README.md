@@ -81,13 +81,13 @@ This is a security feature that keeps control in your hands. Your server is resp
 
 	```kotlin
 	Dapi.setDapiConnectListener(object : OnDapiConnectListener{
-        override fun onSuccess() {
+        	override fun onSuccess() {
 
-        }
+        	}
 
-	override fun onFailure() {
+		override fun onFailure() {
 
-	}
+		}
 
 	})
 
