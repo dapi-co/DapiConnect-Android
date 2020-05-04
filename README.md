@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.3'
+    implementation 'com.dapi.connect:dapi:0.1.4'
 }
 ```
 
