@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.2'
+    implementation 'com.dapi.connect:dapi:0.1.3'
 }
 ```
 
@@ -121,7 +121,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 
 	```kotlin
 	Dapi.getAllDapiConnections(onSuccess = { dapiConnections ->
-		//Here you get all connections and needed identifiers like connectionToken and userSecret
+		//Here you get all connections and needed identifiers like connectionToken
         }, onFailure = { dapiError ->
 
     })
