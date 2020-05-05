@@ -14,14 +14,14 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ### Requirement
 
-- minSdkVersion 23
+- minSdkVersion 21
 - App key (obtain from [Dapi Dashboard](https://dashboard.dapi.co/))
 
 ## Integration
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.4'
+    implementation 'com.dapi.connect:dapi:0.1.5'
 }
 ```
 
