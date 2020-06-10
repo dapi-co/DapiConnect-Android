@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.5'
+    implementation 'com.dapi.connect:dapi:0.1.9'
 }
 ```
 
@@ -44,6 +44,8 @@ This is a security feature that keeps control in your hands. Your server is resp
         super.onCreate()
         val appKey = YOUR_APP_KEY
         val dapiConfig = DapiConfig(
+	    DapiEnvironment.(PRODUCTION/SANDBOX),
+	    showExperimentalBanks(true/false)
             BASE_URL,
             DapiEndpoints(
                 endpoint1 = "",
@@ -121,14 +123,14 @@ This is a security feature that keeps control in your hands. Your server is resp
 
 	```kotlin
 	Dapi.getAllDapiConnections(onSuccess = { dapiConnections ->
-		//Here you get all connections and needed identifiers like connectionToken
+		//Here you get all connections and needed identifiers like accessID
         }, onFailure = { dapiError ->
 
     })
 	```
 
 	```kotlin
-	Dapi.getAccounts(connectionToken, onSuccess = {
+	Dapi.getAccounts(accessID, onSuccess = {
             
         }, onFailure = {
             
@@ -136,7 +138,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 
 	```kotlin
-	Dapi.getIdentity(connectionToken, onSuccess = {
+	Dapi.getIdentity(accessID, onSuccess = {
             
         }, onFailure = {
             
