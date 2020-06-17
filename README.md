@@ -82,7 +82,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 
 	```kotlin
-	Dapi.setDapiConnectListener(object : OnDapiConnectListener{
+	Dapi.setOnDapiConnectListener(object : OnDapiConnectListener{
         	override fun onSuccess() {
 
         	}
