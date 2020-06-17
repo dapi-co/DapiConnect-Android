@@ -104,7 +104,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 
 	```kotlin
-	Dapi.setDapiTransferListener(object : OnDapiTransferListener{
+	Dapi.setOnDapiTransferListener(object : OnDapiTransferListener{
 		override fun onTransferCreated(
 			bankID: String,
 			isCreateBeneficiaryRequired: Boolean
