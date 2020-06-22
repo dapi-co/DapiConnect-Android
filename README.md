@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.12'
+    implementation 'com.dapi.connect:dapi:0.1.14'
 }
 ```
 
@@ -45,20 +45,26 @@ This is a security feature that keeps control in your hands. Your server is resp
         val appKey = YOUR_APP_KEY
         val dapiConfig = DapiConfig(
 	    DapiEnvironment.(PRODUCTION/SANDBOX),
-	    showExperimentalBanks(true/false)
+	    showExperimentalBanks(true/false),
             BASE_URL,
+	    listOf("AE", "EG"),  //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
             DapiEndpoints(
-                endpoint1 = "",
-                endpoint2 = "",
+                endpoint1 = DapiEndpointConfig(
+                PATH,
+                headersMap,
+                paramsMap,
+                bodyMap
+            ),
+                endpoint2 = DapiEndpointConfig(...),
 				....
             )
         )
-        Dapi.initialize(this, appKey, dapiConfig)
-        Dapi.setUserID(USER_ID)
+        DapiApp.initialize(this, appKey, dapiConfig)
+        DapiApp.setUserID(USER_ID)
 
     }
 	```
-	>See `DapiEndpoints` for more
+	>See `DapiApp` and `DapiEndpoints` for more
 
 
 	You can get your app key [from here](https://dashboard.dapi.co/)
@@ -67,82 +73,93 @@ This is a security feature that keeps control in your hands. Your server is resp
 
 	We provide an SDK for your server so Dapi-Android can talk to it. By default, Dapi-Android talks to the endpoints specified in [Dapi docs](https://docs.dapi.co/). 
 
-	If your server's custom implementation uses different endpoint naming than those mentioned in [Dapi docs](https://docs.dapi.co/), you'll need to pass the endpoints to `DapiConfig`'s `dapiEndpoints` property.
+	If your server's custom implementation uses different endpoint naming than those mentioned in [Dapi docs](https://docs.dapi.co/), you'll need to pass the endpoints and optional extra headers, params and body  to `DapiConfig`'s `dapiEndpoints` property.
 
 
 ## Components
 
 
-1. Connect
+1. DapiConnect
 
 	Responsible for showing credential input, authorization, authentication and a list of banks. You can receive callbacks by implementing `OnDapiConnectListener` interface.
 
 	```kotlin
-	Dapi.displayConnect()
+	 val dapiConnect = DapiConnect()
+         dapiConnect.present()
 	```
 
 	```kotlin
-	Dapi.setOnDapiConnectListener(object : OnDapiConnectListener{
-        	override fun onSuccess() {
+	dapiConnect.setOnConnectListener(object  : OnDapiConnectListener{
+            override fun onSuccess(accessID: String, bankID: String) {
 
-        	}
+            }
 
-		override fun onFailure() {
+            override fun onFailure(error: DapiError, bankID: String) {
 
-		}
+            }
 
-	})
+            override fun createBeneficiaryOnConnect(bankID: String): DapiBeneficiaryInfo? {
+                return DapiBeneficiaryInfo(//beneficiary info)
+            }
+        })
 
 	```
 
-2. Payment
+2. DapiAutoFlow
 
 	You can use autoflow to display the connected accounts, balance for each subaccount and a numpad to make a transaction.
 
 	```kotlin
-	Dapi.displayPayment()
+	 val dapiAutoFlow = DapiAutoFlow()
+         dapiAutoFlow.present()
 	```
 
 	```kotlin
-	Dapi.setOnDapiTransferListener(object : OnDapiTransferListener{
-		override fun onTransferCreated(
-			bankID: String,
-			isCreateBeneficiaryRequired: Boolean
-		): DapiBeneficiaryInfo {
+	 dapiAutoFlow.setOnTransferListener(object : OnDapiTransferListener{
+            override fun onTransferFailed(
+                error: DapiError,
+                senderAccountID: String?,
+                recipientAccountID: String?
+            ) {
 
-			return DapiBeneficiaryInfo(
-				//beneficiary info
-			)
-		}
-	})
+            }
+
+            override fun onTransferSucceeded(
+                amount: Double,
+                senderAccountID: String?,
+                recipientAccountID: String?
+            ) {
+
+            }
+
+            override fun onTransferCreated(
+                bankID: String,
+                isCreateBeneficiaryRequired: Boolean
+            ): DapiBeneficiaryInfo {
+                return DapiBeneficiaryInfo(//beneficiary info)
+            }
+        })
 	```
-
-	OR you can use our functions separately and build your own flow and UI.
+3. DapiPayment
+	You can use DapiPayment to use our functions separately and build your own flow and UI.
 
 	For example
 
 	```kotlin
-	Dapi.getAllDapiConnections(onSuccess = { dapiConnections ->
-		//Here you get all connections and needed identifiers like accessID
-        }, onFailure = { dapiError ->
-
-    })
-	```
-
-	```kotlin
-	Dapi.getAccounts(accessID, onSuccess = {
+	val dapiPayment = DapiPayment(accessID) //You can find accessID for any connected account using `getConnections()` in `DapiConnect`
+        dapiPayment.getAccounts(onSuccess = {
             
         }, onFailure = {
             
-    })
+        })
 	```
 
 	```kotlin
-	Dapi.getIdentity(accessID, onSuccess = {
+	dapiPayment.getIdentity(onSuccess = {
             
         }, onFailure = {
             
-    })
+        })
 	```
 
-	>See `Dapi` for more
+	>See `DapiPayment` for more
