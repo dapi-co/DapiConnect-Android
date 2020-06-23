@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.14'
+    implementation 'com.dapi.connect:dapi:0.1.15'
 }
 ```
 
@@ -48,6 +48,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	    showExperimentalBanks(true/false),
             BASE_URL,
 	    listOf("AE", "EG"),  //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
+	    DapiColorScheme.(GENERAL/BW/NEON)
             DapiEndpoints(
                 endpoint1 = DapiEndpointConfig(
                 PATH,
