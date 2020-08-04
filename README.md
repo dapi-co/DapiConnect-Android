@@ -55,10 +55,10 @@ This is a security feature that keeps control in your hands. Your server is resp
             extraHeaders, //Headers to add to all requests
             extraParams, //Params to add to all requests
             extraBody, //Body to add to all requests
-	    dapiEndPoints //DapiEndpoints settings object for different endpoints
+	    	dapiEndPoints //DapiEndpoints settings object for different endpoints
         )
        	val dapiApp = DapiApp(this, dapiConfigurations)
-	val dapiApp2 = ...
+			val dapiApp2 = ...
 
     }
 	```
