@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.1.15'
+    implementation 'com.dapi.connect:dapi:0.1.27'
 }
 ```
 
@@ -42,30 +42,27 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```kotlin
 	override fun onCreate() {
         super.onCreate()
-        val appKey = YOUR_APP_KEY
-        val dapiConfig = DapiConfig(
-	    DapiEnvironment.(PRODUCTION/SANDBOX),
-	    showExperimentalBanks(true/false),
-            BASE_URL,
-	    listOf("AE", "EG"),  //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
-	    DapiColorScheme.(GENERAL/BW/NEON)
-            DapiEndpoints(
-                endpoint1 = DapiEndpointConfig(
-                PATH,
-                headersMap,
-                paramsMap,
-                bodyMap
-            ),
-                endpoint2 = DapiEndpointConfig(...),
-				....
-            )
+	
+	val dapiConfigurations3 = DapiConfigurations(
+            appKey, //Your app key
+            baseUrl, 
+            environment, //DapiEnvironment.SANDBOX or DapiEnvironment.PRODUCTION
+            supportedCountriesCodes, //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
+            clientUserID, //your user ID, used to destinguish between different users on the same device
+            userID, //you can obtain userID using dapiApp.connect.getConnections
+            isExperimental, //for showing experimental banks.
+            theme, //DapiTheme.GENERAL or DapiTheme.ELEGANT or DapiTheme.ELECTRIC
+            extraHeaders, //Headers to add to all requests
+            extraParams, //Params to add to all requests
+            extraBody, //Body to add to all requests
+	    dapiEndPoints //DapiEndpoints settings object for different endpoints
         )
-        DapiApp.initialize(this, appKey, dapiConfig)
-        DapiApp.setUserID(USER_ID)
+       	val dapiApp = DapiApp(this, dapiConfigurations)
+	val dapiApp2 = ...
 
     }
 	```
-	>See `DapiApp` and `DapiEndpoints` for more
+	>See `DapiApp` for more
 
 
 	You can get your app key [from here](https://dashboard.dapi.co/)
@@ -85,13 +82,13 @@ This is a security feature that keeps control in your hands. Your server is resp
 	Responsible for showing credential input, authorization, authentication and a list of banks. You can receive callbacks by implementing `OnDapiConnectListener` interface.
 
 	```kotlin
-	 val dapiConnect = DapiConnect()
-         dapiConnect.present()
+	val dapiApp = DapiApp.getInstance() //or val dapiApps = DapiApp.getInstances() to get all instances
+	dapiApp.connect.present()
 	```
 
 	```kotlin
-	dapiConnect.setOnConnectListener(object  : OnDapiConnectListener{
-            override fun onSuccess(accessID: String, bankID: String) {
+	dapiApp.connect.setOnConnectListener(object : OnDapiConnectListener {
+            override fun onSuccess(userID: String, bankID: String) {
 
             }
 
@@ -99,68 +96,148 @@ This is a security feature that keeps control in your hands. Your server is resp
 
             }
 
-            override fun createBeneficiaryOnConnect(bankID: String): DapiBeneficiaryInfo? {
-                return DapiBeneficiaryInfo(//beneficiary info)
+            override fun onProceed(userID: String, bankID: String) {
+	    
             }
+	
+            override fun createBeneficiaryOnConnect(bankID: String): DapiBeneficiaryInfo? {
+                val info = DapiBeneficiaryInfo()
+                val lineAddress = LinesAddress()
+                lineAddress.line1 = "line1"
+                lineAddress.line2 = "line2"
+                lineAddress.line3 = "line3"
+                info.linesAddress = lineAddress
+                info.accountNumber = "xxxxxxxxx"
+                info.bankName = "xxxx"
+                info.swiftCode = "xxxxx"
+                info.iban = "xxxxxxxxxxxxxxxxxxxxxxxxx"
+                info.country = "UNITED ARAB EMIRATES"
+                info.branchAddress = "branchAddress"
+                info.branchName = "branchName"
+                info.phoneNumber = "xxxxxxxxxxx"
+                info.name = "xxxxx"
+                return info
+            }
+
         })
 
 	```
+	
+	```kotlin
+	dapiApp.connect.getConnections(onSuccess = { 
+               
+        }, onFailure =  {
+                
+        })
+	 ```
 
 2. DapiAutoFlow
 
 	You can use autoflow to display the connected accounts, balance for each subaccount and a numpad to make a transaction.
 
 	```kotlin
-	 val dapiAutoFlow = DapiAutoFlow()
-         dapiAutoFlow.present()
+	 dapiApp.autoFlow.present()
 	```
 
 	```kotlin
-	 dapiAutoFlow.setOnTransferListener(object : OnDapiTransferListener{
-            override fun onTransferFailed(
-                error: DapiError,
-                senderAccountID: String?,
-                recipientAccountID: String?
-            ) {
-
-            }
-
+	dapiApp.autoFlow.setOnTransferListener(object : OnDapiTransferListener {
             override fun onTransferSucceeded(
                 amount: Double,
                 senderAccountID: String?,
                 recipientAccountID: String?
             ) {
+                
+            }
 
+            override fun onTransferFailed(
+                error: DapiError,
+                senderAccountID: String?,
+                recipientAccountID: String?
+            ) {
+                
             }
 
             override fun onTransferCreated(
                 bankID: String,
                 isCreateBeneficiaryRequired: Boolean
             ): DapiBeneficiaryInfo {
-                return DapiBeneficiaryInfo(//beneficiary info)
+                 val info = DapiBeneficiaryInfo()
+                val lineAddress = LinesAddress()
+                lineAddress.line1 = "line1"
+                lineAddress.line2 = "line2"
+                lineAddress.line3 = "line3"
+                info.linesAddress = lineAddress
+                info.accountNumber = "xxxxxxxxx"
+                info.bankName = "xxxx"
+                info.swiftCode = "xxxxx"
+                info.iban = "xxxxxxxxxxxxxxxxxxxxxxxxx"
+                info.country = "UNITED ARAB EMIRATES"
+                info.branchAddress = "branchAddress"
+                info.branchName = "branchName"
+                info.phoneNumber = "xxxxxxxxxxx"
+                info.name = "xxxxx"
+                return info
             }
+
         })
 	```
-3. DapiPayment
-	You can use DapiPayment to use our functions separately and build your own flow and UI.
+3. Data, Payment, Metadata, User
+	You can use these to use our functions separately and build your own flow and UI.
 
 	For example
 
 	```kotlin
-	val dapiPayment = DapiPayment(accessID) //You can find accessID for any connected account using `getConnections()` in `DapiConnect`
-        dapiPayment.getAccounts(onSuccess = {
-            
-        }, onFailure = {
-            
-        })
-	```
+		dapiApp.data.getIdentity(onSuccess = {
+                    
+                }, onFailure =  {
 
-	```kotlin
-	dapiPayment.getIdentity(onSuccess = {
-            
-        }, onFailure = {
-            
-        })
-	```
+                })
+		
+		dapiApp.data.getAccounts(onSuccess = {
+                        
+                }, onFailure =  {
 
-	>See `DapiPayment` for more
+                })
+		
+		dapiApp.data.getBalance(accountID, onSuccess =  {
+		
+                }, onFailure =  {
+			
+                })
+		
+		dapiApp.data.getTransactions(accountID, fromDate, toDate, onSuccess = {
+                    
+                } , onFailure =  {
+                    
+                })
+		
+		dapiApp.payment.createBeneficiary(DapiBeneficiaryInfo(), onSuccess = {
+                    
+                }, onFailure =  {
+                    
+                })
+                
+                dapiApp.payment.createTransfer(receiverID, senderID, amount, onSuccess = {
+                    
+                }, onFailure =  {
+                    
+                })
+
+                dapiApp.payment.createTransfer(iban, name, senderID, amount, onSuccess = {
+
+                }, onFailure =  {
+
+                })
+		
+                dapiApp.metadata.getAccountMetaData(onSuccess = {
+
+                }, onFailure =  {
+		
+                })
+		
+		dapiApp.user.delink(onSuccess = {
+                    
+                }, onFailure =  {
+                    
+                })
+	```
