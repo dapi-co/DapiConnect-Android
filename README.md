@@ -211,19 +211,19 @@ This is a security feature that keeps control in your hands. Your server is resp
                     
                 })
 		
-	dapiApp.payment.createBeneficiary(DapiBeneficiaryInfo(), onSuccess = {
+		dapiApp.payment.createBeneficiary(DapiBeneficiaryInfo(), onSuccess = {
                     
                 }, onFailure =  {
                     
                 })
-                
-         dapiApp.payment.createTransfer(receiverID, senderID, amount, onSuccess = {
+		
+         	dapiApp.payment.createTransfer(receiverID, senderID, amount, onSuccess = {
                     
                 }, onFailure =  {
                     
                 })
-
-         dapiApp.payment.createTransfer(iban, name, senderID, amount, onSuccess = {
+		
+         	dapiApp.payment.createTransfer(iban, name, senderID, amount, onSuccess = {
 
                 }, onFailure =  {
 
