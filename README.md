@@ -57,8 +57,7 @@ This is a security feature that keeps control in your hands. Your server is resp
             extraBody, //Body to add to all requests
 	    	dapiEndPoints //DapiEndpoints settings object for different endpoints
         )
-	
-       	val dapiApp = DapiApp(this, dapiConfigurations)
+	val dapiApp = DapiApp(this, dapiConfigurations)
 	val dapiApp2 = ...
 
     }
