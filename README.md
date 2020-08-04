@@ -43,7 +43,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	override fun onCreate() {
         super.onCreate()
 	
-	val dapiConfigurations3 = DapiConfigurations(
+	val dapiConfigurations = DapiConfigurations(
             appKey, //Your app key
             baseUrl, 
             environment, //DapiEnvironment.SANDBOX or DapiEnvironment.PRODUCTION
