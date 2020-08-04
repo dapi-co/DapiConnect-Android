@@ -48,14 +48,14 @@ This is a security feature that keeps control in your hands. Your server is resp
             baseUrl, 
             environment, //DapiEnvironment.SANDBOX or DapiEnvironment.PRODUCTION
             supportedCountriesCodes, //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
-            clientUserID, //your user ID, used to destinguish between different users on the same device
-            userID, //you can obtain userID using dapiApp.connect.getConnections
-            isExperimental, //for showing experimental banks.
-            theme, //DapiTheme.GENERAL or DapiTheme.ELEGANT or DapiTheme.ELECTRIC
-            extraHeaders, //Headers to add to all requests
-            extraParams, //Params to add to all requests
-            extraBody, //Body to add to all requests
-	    	dapiEndPoints //DapiEndpoints settings object for different endpoints
+            clientUserID, //OPTIONAL. your user ID, used to destinguish between different users on the same device
+            userID, //OPTIONAL. you can obtain userID using dapiApp.connect.getConnections
+            isExperimental, //OPTIONAL. for showing experimental banks.
+            theme, //OPTIONAL. DapiTheme.GENERAL or DapiTheme.ELEGANT or DapiTheme.ELECTRIC
+            extraHeaders, //OPTIONAL. Headers to add to all requests
+            extraParams, //OPTIONAL. Params to add to all requests
+            extraBody, //OPTIONAL. Body to add to all requests
+	    	dapiEndPoints //OPTIONAL. DapiEndpoints settings object for different endpoints
         )
 	val dapiApp = DapiApp(this, dapiConfigurations)
 	val dapiApp2 = ...
