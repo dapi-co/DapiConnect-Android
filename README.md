@@ -182,9 +182,8 @@ This is a security feature that keeps control in your hands. Your server is resp
         })
 	```
 3. Data, Payment, Metadata, User
-	You can use these to use our functions separately and build your own flow and UI.
 
-	For example
+	You can use these to use our functions separately and build your own flow and UI.
 
 	```kotlin
 		dapiApp.data.getIdentity(onSuccess = {
@@ -241,3 +240,9 @@ This is a security feature that keeps control in your hands. Your server is resp
                     
                 })
 	```
+	
+Finally, you should release the SDK when your app closes using
+
+```kotlin
+dapiApp.release()
+```
