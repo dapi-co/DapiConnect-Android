@@ -49,7 +49,7 @@ This is a security feature that keeps control in your hands. Your server is resp
             environment, //DapiEnvironment.SANDBOX or DapiEnvironment.PRODUCTION
             supportedCountriesCodes, //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
             clientUserID, //OPTIONAL. your user ID, used to destinguish between different users on the same device
-            userID, //OPTIONAL. you can obtain userID using dapiApp.connect.getConnections
+            userID, //OPTIONAL. you can obtain userID using dapiApp.connect.getConnections. Initially it will be null, but you can use this as the default userID afterwards.
             isExperimental, //OPTIONAL. for showing experimental banks.
             theme, //OPTIONAL. DapiTheme.GENERAL or DapiTheme.ELEGANT or DapiTheme.ELECTRIC
             extraHeaders, //OPTIONAL. Headers to add to all requests
