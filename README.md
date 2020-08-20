@@ -57,12 +57,12 @@ This is a security feature that keeps control in your hands. Your server is resp
             extraBody, //OPTIONAL. Body to add to all requests
 	    	dapiEndPoints //OPTIONAL. DapiEndpoints settings object for different endpoints
         )
-	val dapiApp = DapiApp(this, dapiConfigurations)
+	val dapiClient = DapiClient(this, dapiConfigurations)
 	val dapiApp2 = ...
 
     }
 	```
-	>See `DapiApp` for more
+	>See `DapiClient` for more
 
 
 	You can get your app key [from here](https://dashboard.dapi.co/)
@@ -82,17 +82,17 @@ This is a security feature that keeps control in your hands. Your server is resp
 	Responsible for showing credential input, authorization, authentication and a list of banks. You can receive callbacks by implementing `OnDapiConnectListener` interface.
 
 	```kotlin
-	val dapiApp = DapiApp.getInstance() //or val dapiApps = DapiApp.getInstances() to get all instances
-	dapiApp.connect.present()
+	val dapiClient = DapiClient.getInstance() //or val dapiClients = DapiClient.getInstances() to get all instances
+	dapiClient.connect.present()
 	```
 
 	```kotlin
-	dapiApp.connect.setOnConnectListener(object : OnDapiConnectListener {
-            override fun onSuccess(userID: String, bankID: String) {
+	dapiClient.connect.setOnConnectListener(object : OnDapiConnectListener {
+            override fun onConnectionSuccessful(userID: String, bankID: String) {
 
             }
 
-            override fun onFailure(error: DapiError, bankID: String) {
+            override fun onConnectionFailure(error: DapiError, bankID: String) {
 
             }
 
@@ -100,22 +100,23 @@ This is a security feature that keeps control in your hands. Your server is resp
 	    
             }
 	
-            override fun createBeneficiaryOnConnect(bankID: String): DapiBeneficiaryInfo? {
-                val info = DapiBeneficiaryInfo()
+            override fun setBeneficiaryInfoOnConnect(bankID: String): DapiBeneficiaryInfo? {
                 val lineAddress = LinesAddress()
-                lineAddress.line1 = "line1"
-                lineAddress.line2 = "line2"
-                lineAddress.line3 = "line3"
-                info.linesAddress = lineAddress
-                info.accountNumber = "xxxxxxxxx"
-                info.bankName = "xxxx"
-                info.swiftCode = "xxxxx"
-                info.iban = "xxxxxxxxxxxxxxxxxxxxxxxxx"
-                info.country = "UNITED ARAB EMIRATES"
-                info.branchAddress = "branchAddress"
-                info.branchName = "branchName"
-                info.phoneNumber = "xxxxxxxxxxx"
-                info.name = "xxxxx"
+        	lineAddress.line1 = "line1"
+        	lineAddress.line2 = "line2"
+        	lineAddress.line3 = "line3"
+        	val info = DapiBeneficiaryInfo(
+            	linesAddress = lineAddress,
+            	accountNumber = "xxxxxxxxx",
+            	name = "xxxxx",
+            	bankName = "xxxx",
+            	swiftCode = "xxxxx",
+            	iban = "xxxxxxxxxxxxxxxxxxxxxxxxx",
+            	country = "UNITED ARAB EMIRATES",
+            	branchAddress = "branchAddress",
+            	branchName = "branchName",
+            	phoneNumber = "xxxxxxxxxxx"
+        	)
                 return info
             }
 
@@ -124,7 +125,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 	
 	```kotlin
-	dapiApp.connect.getConnections(onSuccess = { 
+	dapiClient.connect.getConnections(onSuccess = { 
                
         }, onFailure =  {
                 
@@ -136,20 +137,21 @@ This is a security feature that keeps control in your hands. Your server is resp
 	You can use autoflow to display the connected accounts, balance for each subaccount and a numpad to make a transaction.
 
 	```kotlin
-	 dapiApp.autoFlow.present()
+	 dapiClient.autoFlow.present()
 	```
 
 	```kotlin
-	dapiApp.autoFlow.setOnTransferListener(object : OnDapiTransferListener {
-            override fun onTransferSucceeded(
+	dapiClient.autoFlow.setOnTransferListener(object : OnDapiTransferListener {
+            override fun onAutoFlowSuccessful(
                 amount: Double,
                 senderAccountID: String?,
-                recipientAccountID: String?
+                recipientAccountID: String?,
+                jobID: String
             ) {
                 
             }
 
-            override fun onTransferFailed(
+            override fun onAutoFlowFailure(
                 error: DapiError,
                 senderAccountID: String?,
                 recipientAccountID: String?
@@ -157,25 +159,25 @@ This is a security feature that keeps control in your hands. Your server is resp
                 
             }
 
-            override fun onTransferCreated(
-                bankID: String,
-                isCreateBeneficiaryRequired: Boolean
+            override fun setBeneficiaryInfoOnAutoFlow(
+                bankID: String
             ): DapiBeneficiaryInfo {
-                 val info = DapiBeneficiaryInfo()
-                val lineAddress = LinesAddress()
-                lineAddress.line1 = "line1"
-                lineAddress.line2 = "line2"
-                lineAddress.line3 = "line3"
-                info.linesAddress = lineAddress
-                info.accountNumber = "xxxxxxxxx"
-                info.bankName = "xxxx"
-                info.swiftCode = "xxxxx"
-                info.iban = "xxxxxxxxxxxxxxxxxxxxxxxxx"
-                info.country = "UNITED ARAB EMIRATES"
-                info.branchAddress = "branchAddress"
-                info.branchName = "branchName"
-                info.phoneNumber = "xxxxxxxxxxx"
-                info.name = "xxxxx"
+                 val lineAddress = LinesAddress()
+        	lineAddress.line1 = "line1"
+        	lineAddress.line2 = "line2"
+        	lineAddress.line3 = "line3"
+        	val info = DapiBeneficiaryInfo(
+            	linesAddress = lineAddress,
+            	accountNumber = "xxxxxxxxx",
+            	name = "xxxxx",
+            	bankName = "xxxx",
+            	swiftCode = "xxxxx",
+            	iban = "xxxxxxxxxxxxxxxxxxxxxxxxx",
+            	country = "UNITED ARAB EMIRATES",
+            	branchAddress = "branchAddress",
+            	branchName = "branchName",
+            	phoneNumber = "xxxxxxxxxxx"
+        	)
                 return info
             }
 
@@ -186,55 +188,55 @@ This is a security feature that keeps control in your hands. Your server is resp
 	You can use these to use our functions separately and build your own flow and UI.
 
 	```kotlin
-		dapiApp.data.getIdentity(onSuccess = {
+		dapiClient.data.getIdentity(onSuccess = {
                     
                 }, onFailure =  {
 
                 })
 		
-		dapiApp.data.getAccounts(onSuccess = {
+		dapiClient.data.getAccounts(onSuccess = {
                         
                 }, onFailure =  {
 
                 })
 		
-		dapiApp.data.getBalance(accountID, onSuccess =  {
+		dapiClient.data.getBalance(accountID, onSuccess =  {
 		
                 }, onFailure =  {
 			
                 })
 		
-		dapiApp.data.getTransactions(accountID, fromDate, toDate, onSuccess = {
+		dapiClient.data.getTransactions(accountID, fromDate, toDate, onSuccess = {
                     
                 } , onFailure =  {
                     
                 })
 		
-		dapiApp.payment.createBeneficiary(DapiBeneficiaryInfo(), onSuccess = {
+		dapiClient.payment.createBeneficiary(DapiBeneficiaryInfo(), onSuccess = {
                     
                 }, onFailure =  {
                     
                 })
 		
-         	dapiApp.payment.createTransfer(receiverID, senderID, amount, onSuccess = {
+         	dapiClient.payment.createTransfer(receiverID, senderID, amount, onSuccess = {
                     
                 }, onFailure =  {
                     
                 })
 		
-         	dapiApp.payment.createTransfer(iban, name, senderID, amount, onSuccess = {
+         	dapiClient.payment.createTransfer(iban, name, senderID, amount, onSuccess = {
 
                 }, onFailure =  {
 
                 })
 		
-                dapiApp.metadata.getAccountMetaData(onSuccess = {
+                dapiClient.metadata.getAccountMetaData(onSuccess = {
 
                 }, onFailure =  {
 		
                 })
 		
-		dapiApp.user.delink(onSuccess = {
+		dapiClient.auth.delink(onSuccess = {
                     
                 }, onFailure =  {
                     
@@ -244,5 +246,5 @@ This is a security feature that keeps control in your hands. Your server is resp
 Finally, you should release the SDK when your app closes using
 
 ```kotlin
-dapiApp.release()
+dapiClient.release()
 ```
