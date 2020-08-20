@@ -183,7 +183,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 
         })
 	```
-3. Data, Payment, Metadata, User
+3. Data, Payment, Metadata, Auth
 
 	You can use these to use our functions separately and build your own flow and UI.
 
