@@ -58,7 +58,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	    	dapiEndPoints //OPTIONAL. DapiEndpoints settings object for different endpoints
         )
 	val dapiClient = DapiClient(this, dapiConfigurations)
-	val dapiApp2 = ...
+	val dapiClient2 = ...
 
     }
 	```
