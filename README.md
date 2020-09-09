@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:0.2.0'
+    implementation 'com.dapi.connect:dapi:0.2.6'
 }
 ```
 
@@ -179,6 +179,12 @@ This is a security feature that keeps control in your hands. Your server is resp
             	phoneNumber = "xxxxxxxxxxx"
         	)
                 return info
+            }
+	    
+	    //Optional
+            override fun onPaymentStarted(bankID: String) {
+                super.onPaymentStarted(bankID)
+                
             }
 
         })
