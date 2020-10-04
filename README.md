@@ -35,7 +35,7 @@ DapiConnect SDK communicates with API endpoints to make network requests. Reques
 
 This is a security feature that keeps control in your hands. Your server is responsible for maintaining access tokens by creating, storing, and refreshing them.
 
-## Integration
+## Usage
 
 1. Initialize the SDK in your Application class
 
