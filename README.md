@@ -1,5 +1,5 @@
-# DapiConnect-Android
-Financial APIs to connect users' bank accounts
+# DapiConnect-Android1	
+This guide will show you how to integrate DapiConnect SDK for Android and use its components to interact with the API.
 
 
 # Dapi Android SDK
@@ -12,7 +12,7 @@ Dapi for Android is a prebuilt SDK that reduces the time it takes to integrate w
 
 The SDK provides direct access to Dapi endpoints and offers optional UI to manage users' accounts, subaccounts, balance and money transfer.
 
-### Requirement
+### Requirements
 
 - minSdkVersion 21
 - App key (obtain from [Dapi Dashboard](https://dashboard.dapi.co/))
@@ -31,8 +31,9 @@ dependencies {
 DapiConnect SDK communicates with API endpoints to make network requests. Requests do NOT go to Dapi servers directly. Instead, requests first go to your server and then to Dapi servers. See the example gif below:
 > *(don't worry, we also have an [SDK for your server](https://github.com/dapi-co/sdk-server))*
 
-![dfd](https://github.com/dapi-co/DapiConnect-iOS/raw/master/DapiConnectGIF.gif)
+![dfd](https://files.readme.io/977c042-Comp_1_8.gif)
 
+### Why?
 This is a security feature that keeps control in your hands. Your server is responsible for maintaining access tokens by creating, storing, and refreshing them.
 
 ## Usage
