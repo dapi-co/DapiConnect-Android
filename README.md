@@ -223,13 +223,19 @@ This is a security feature that keeps control in your hands. Your server is resp
                     
                 })
 		
-         	dapiClient.payment.createTransfer(receiverID, senderID, amount, onSuccess = {
+         	dapiClient.payment.createTransfer(receiverID, senderID, amount, remark,onSuccess = {
                     
                 }, onFailure =  {
                     
                 })
 		
-         	dapiClient.payment.createTransfer(iban, name, senderID, amount, onSuccess = {
+         	dapiClient.payment.createTransfer(iban, name, senderID, amount, remark,onSuccess = {
+
+                }, onFailure =  {
+
+                })
+		
+		dapiClient.payment.createTransfer(accountNumber, name, amount, senderID, remark,onSuccess = {
 
                 }, onFailure =  {
 
