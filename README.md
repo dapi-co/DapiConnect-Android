@@ -123,7 +123,7 @@ This is a security feature that keeps control in your hands. Your server is resp
                                 phoneNumber
                         )
                 )
-//                beneficiaryInfo(null) or pass null if you don't want to use this
+               //beneficiaryInfo(null) or pass null if you don't want to use this
             }
 
         })
