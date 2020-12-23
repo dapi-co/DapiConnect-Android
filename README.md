@@ -21,7 +21,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ```gradle
 dependencies {
-    implementation 'com.dapi.connect:dapi:1.0.0'
+    implementation 'com.dapi.connect:dapi:1.0.1'
 }
 ```
 
@@ -50,7 +50,6 @@ This is a security feature that keeps control in your hands. Your server is resp
             environment, //DapiEnvironment.SANDBOX or DapiEnvironment.PRODUCTION
             supportedCountriesCodes, //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
 	    clientUserID, //OPTIONAL. your user ID, used to destinguish between different users on the same device
-            userID, //OPTIONAL. you can obtain userID using dapiApp.connect.getConnections. Initially it will be null, but you can use this as the default userID afterwards.
             isExperimental, //OPTIONAL. for showing experimental banks.
             theme, //OPTIONAL. DapiTheme.GENERAL or DapiTheme.ELEGANT or DapiTheme.ELECTRIC
             extraHeaders, //OPTIONAL. Headers to add to all requests
@@ -87,36 +86,44 @@ This is a security feature that keeps control in your hands. Your server is resp
 
 	```kotlin
 	dapiClient.connect.setOnConnectListener(object : OnDapiConnectListener {
+            override fun onConnectionFailure(error: DapiError, bankID: String) {
+            }
+
             override fun onConnectionSuccessful(userID: String, bankID: String) {
 
             }
 
-            override fun onConnectionFailure(error: DapiError, bankID: String) {
+            override fun setBeneficiaryInfoOnConnect(bankID: String, beneficiaryInfo: (DapiBeneficiaryInfo?) -> Unit) {
 
-            }
-
-            override fun onProceed(userID: String, bankID: String) {
-	    
-            }
-	
-            override fun setBeneficiaryInfoOnConnect(bankID: String): DapiBeneficiaryInfo? {
-                val lineAddress = LinesAddress()
-        	lineAddress.line1 = "line1"
-        	lineAddress.line2 = "line2"
-        	lineAddress.line3 = "line3"
-        	val info = DapiBeneficiaryInfo(
-            	linesAddress = lineAddress,
-            	accountNumber = "xxxxxxxxx",
-            	name = "xxxxx",
-            	bankName = "xxxx",
-            	swiftCode = "xxxxx",
-            	iban = "xxxxxxxxxxxxxxxxxxxxxxxxx",
-            	country = "UNITED ARAB EMIRATES",
-            	branchAddress = "branchAddress",
-            	branchName = "branchName",
-            	phoneNumber = "xxxxxxxxxxx"
-        	)
-                return info
+                val linesAddress = LinesAddress()
+                linesAddress.line1 = "line1"
+                linesAddress.line2 = "line2"
+                linesAddress.line3 = "line3"
+                val accountNumber = "xxxx"
+                val name = "xxxx"
+                val bankName = "xxxx"
+                val swiftCode = "xxxx"
+                val iban = "xxxx"
+                val country = "xxxx"
+                val branchAddress = "xxxx"
+                val branchName = "xxxx"
+                val phoneNumber = "xxxx"
+                beneficiaryInfo(
+                        DapiBeneficiaryInfo
+                        (
+                                linesAddress,
+                                accountNumber,
+                                name,
+                                bankName,
+                                swiftCode,
+                                iban,
+                                country,
+                                branchAddress,
+                                branchName,
+                                phoneNumber
+                        )
+                )
+//                beneficiaryInfo(null) or pass null if you don't want to use this
             }
 
         })
@@ -141,50 +148,50 @@ This is a security feature that keeps control in your hands. Your server is resp
 
 	```kotlin
 	dapiClient.autoFlow.setOnTransferListener(object : OnDapiTransferListener {
-            override fun onAutoFlowSuccessful(
-                amount: Double,
-                senderAccountID: String?,
-                recipientAccountID: String?,
-                jobID: String
-            ) {
-                
+
+            override fun onAutoFlowSuccessful(amount: Double, senderAccount: AccountsItem, recipientAccountID: String?, jobID: String) {
+
             }
 
-            override fun onAutoFlowFailure(
-                error: DapiError,
-                senderAccountID: String?,
-                recipientAccountID: String?
-            ) {
-                
+            override fun onAutoFlowFailure(error: DapiError, senderAccount: AccountsItem, recipientAccountID: String?) {
+
             }
 
-            override fun setBeneficiaryInfoOnAutoFlow(
-                bankID: String
-            ): DapiBeneficiaryInfo {
-                 val lineAddress = LinesAddress()
-        	lineAddress.line1 = "line1"
-        	lineAddress.line2 = "line2"
-        	lineAddress.line3 = "line3"
-        	val info = DapiBeneficiaryInfo(
-            	linesAddress = lineAddress,
-            	accountNumber = "xxxxxxxxx",
-            	name = "xxxxx",
-            	bankName = "xxxx",
-            	swiftCode = "xxxxx",
-            	iban = "xxxxxxxxxxxxxxxxxxxxxxxxx",
-            	country = "UNITED ARAB EMIRATES",
-            	branchAddress = "branchAddress",
-            	branchName = "branchName",
-            	phoneNumber = "xxxxxxxxxxx"
-        	)
-                return info
+            override fun preAutoFlowTransfer(amount: Double, senderAccount: AccountsItem) {
+
             }
 	    
-	    //Optional
-            override fun onPaymentStarted(bankID: String) {
-                super.onPaymentStarted(bankID)
-                
+            override fun setBeneficiaryInfoOnAutoFlow(bankID: String, beneficiaryInfo: (DapiBeneficiaryInfo) -> Unit) {
+                val linesAddress = LinesAddress()
+                linesAddress.line1 = "line1"
+                linesAddress.line2 = "line2"
+                linesAddress.line3 = "line3"
+                val accountNumber = "xxxx"
+                val name = "xxxx"
+                val bankName = "xxxx"
+                val swiftCode = "xxxx"
+                val iban = "xxxx"
+                val country = "xxxx"
+                val branchAddress = "xxxx"
+                val branchName = "xxxx"
+                val phoneNumber = "xxxx"
+                beneficiaryInfo(
+                        DapiBeneficiaryInfo
+                        (
+                                linesAddress,
+                                accountNumber,
+                                name,
+                                bankName,
+                                swiftCode,
+                                iban,
+                                country,
+                                branchAddress,
+                                branchName,
+                                phoneNumber
+                        )
+                )
             }
+
 
         })
 	```
