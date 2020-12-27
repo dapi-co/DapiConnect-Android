@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.dapi.connect.core.base.DapiClient.Companion.getInstance
+import com.dapi.connect.core.base.DapiClient
 import com.dapi.connect.core.callbacks.OnDapiConnectListener
 import com.dapi.connect.core.callbacks.OnDapiTransferListener
 import com.dapi.connect.data.endpoint_models.*
 import com.dapi.connect.data.models.DapiBeneficiaryInfo
+import com.dapi.connect.data.models.DapiConnection
 import com.dapi.connect.data.models.DapiError
 import java.util.*
 import com.dapi.connect.data.models.LinesAddress
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val dapiClient = getInstance()
+        val dapiClient = DapiClient.instances.first()
         val connect = dapiClient.connect
         val autoFlow = dapiClient.autoFlow
         //Starting Connect
@@ -37,19 +38,24 @@ class MainActivity : AppCompatActivity() {
 
         //get cached connections
         connect.getConnections({
+            if (it.isNotEmpty()) {
+                //DapiClient will perform operations on this connection
+                //For example, dapiClient.data.getAccounts({}, {}) will be called on this connection
+                dapiClient.connection = it.first()
+            }
 
         }) {
 
         }
 
         //setting connect callbacks
-        connect.setOnConnectListener(object : OnDapiConnectListener {
+        connect.listener = object : OnDapiConnectListener {
             //Called when the connection fails for any reason, you'll get info on the error in dapiError and logcat.
             override fun onConnectionFailure(error: DapiError, bankID: String) {
             }
 
             //Called after successful connection.
-            override fun onConnectionSuccessful(userID: String, bankID: String) {
+            override fun onConnectionSuccessful(connection : DapiConnection) {
 
             }
 
@@ -92,25 +98,26 @@ class MainActivity : AppCompatActivity() {
 //                beneficiaryInfo(null) or pass null if you don't want to use this
             }
 
-        })
+        }
 
         //Setting autoflow callbacks
-        autoFlow.setOnTransferListener(object : OnDapiTransferListener {
+        autoFlow.transferListener = object : OnDapiTransferListener {
 
             //Called after a successful transfer
-            override fun onAutoFlowSuccessful(amount: Double, senderAccount: AccountsItem, recipientAccountID: String?, jobID: String) {
+            override fun onAutoFlowSuccessful(amount: Double, senderAccount: DapiAccount, recipientAccountID: String?, jobID: String) {
 
             }
 
             //Called when an error happens during making a transfer
-            override fun onAutoFlowFailure(error: DapiError, senderAccount: AccountsItem, recipientAccountID: String?) {
+            override fun onAutoFlowFailure(error: DapiError, senderAccount: DapiAccount, recipientAccountID: String?) {
 
             }
 
             //Called when the user taps on Send button
-            override fun preAutoFlowTransfer(amount: Double, senderAccount: AccountsItem) {
+            override fun preAutoFlowTransfer(amount: Double, senderAccount: DapiAccount) {
 
             }
+
             //The beneficiary to send the money to.
             override fun setBeneficiaryInfoOnAutoFlow(bankID: String, beneficiaryInfo: (DapiBeneficiaryInfo) -> Unit) {
                 val linesAddress = LinesAddress()
@@ -144,8 +151,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-        })
-        dapiClient.userID = "USER_ID" //This is Dapi's userID, you can get it using connect.getConnections() like above.
+        }
         //        dapiClient.setConfigurations() //Used when you want to update DapiConfigurations at runtime
 
 
@@ -249,7 +255,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val dapiClient = getInstance()
+        val dapiClient = DapiClient.instances.first()
         dapiClient.release()
     }
 }

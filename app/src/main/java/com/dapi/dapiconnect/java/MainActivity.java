@@ -11,7 +11,9 @@ import com.dapi.connect.core.base.DapiConnect;
 import com.dapi.connect.core.callbacks.OnDapiConnectListener;
 import com.dapi.connect.core.callbacks.OnDapiTransferListener;
 import com.dapi.connect.data.endpoint_models.AccountsItem;
+import com.dapi.connect.data.endpoint_models.DapiAccount;
 import com.dapi.connect.data.models.DapiBeneficiaryInfo;
+import com.dapi.connect.data.models.DapiConnection;
 import com.dapi.connect.data.models.DapiError;
 import com.dapi.connect.data.models.LinesAddress;
 import com.dapi.dapiconnect.R;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DapiClient dapiClient = DapiClient.Companion.getInstance();
+        DapiClient dapiClient = DapiClient.getInstances().get(0);
         DapiConnect connect = dapiClient.getConnect();
         DapiAutoFlow autoFlow = dapiClient.getAutoFlow();
         //Starting Connect
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Button autoFlowBtn = findViewById(R.id.autoFlow);
         autoFlowBtn.setOnClickListener(view -> {
             //You may pass accountID and amount to navigate directly to the numpad
-            autoFlow.present(null, 0);
+            autoFlow.present();
         });
 
         //get cached connections
@@ -53,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
 
             //HERE
-
+            //DapiClient will perform operations on this connection
+            //For example, dapiClient.getData().getAccounts({}, {}) will be called on this connection
+            dapiClient.setConnection(dapiConnections.get(0));
 
             return null;
         }, dapiError -> {
@@ -66,11 +70,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //setting connect callbacks
-        connect.setOnConnectListener(new OnDapiConnectListener(){
+        connect.setListener(new OnDapiConnectListener(){
 
             //Called after successful connection.
             @Override
-            public void onConnectionSuccessful(@NotNull String userID, @NotNull String bankID) {
+            public void onConnectionSuccessful(@NotNull DapiConnection connection) {
 
             }
 
@@ -109,19 +113,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Setting autoflow callbacks
-        autoFlow.setOnTransferListener(new OnDapiTransferListener() {
+        autoFlow.setTransferListener(new OnDapiTransferListener() {
             //Called after a successful transfer
 
 
             @Override
-            public void onAutoFlowSuccessful(double amount, @NotNull AccountsItem accountsItem, @Nullable String receiverID, @NotNull String jobID) {
+            public void onAutoFlowSuccessful(double amount, @NotNull DapiAccount account, @Nullable String receiverID, @NotNull String jobID) {
 
             }
 
             //Called when an error happens during making a transfer
 
             @Override
-            public void onAutoFlowFailure(@NotNull DapiError dapiError, @NotNull AccountsItem accountsItem, @Nullable String s) {
+            public void onAutoFlowFailure(@NotNull DapiError dapiError, @NotNull DapiAccount account, @Nullable String recipientAccountID) {
 
             }
 
@@ -149,13 +153,12 @@ public class MainActivity extends AppCompatActivity {
 
             //Called when the user taps on Send button
             @Override
-            public void preAutoFlowTransfer(double amount, @NotNull AccountsItem accountsItem) {
+            public void preAutoFlowTransfer(double amount, @NotNull DapiAccount accountsItem) {
 
             }
         });
 
 
-        dapiClient.setUserID("USER_ID"); //This is Dapi's userID, you can get it using connect.getConnections() like above.
 //        dapiClient.setConfigurations() //Used when you want to update DapiConfigurations at runtime
 
 
@@ -270,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DapiClient dapiClient = DapiClient.Companion.getInstance();
+        DapiClient dapiClient = DapiClient.getInstances().get(0);
         dapiClient.release();
     }
 }

@@ -2,8 +2,8 @@ package com.dapi.dapiconnect.java;
 
 import android.app.Application;
 
+import com.dapi.connect.core.enums.ColorScheme;
 import com.dapi.connect.core.enums.DapiEnvironment;
-import com.dapi.connect.core.enums.DapiTheme;
 import com.dapi.connect.data.models.DapiConfigurations;
 import com.dapi.connect.data.models.DapiEndpoints;
 import com.dapi.connect.core.base.DapiClient;
@@ -37,13 +37,13 @@ public class App extends Application {
         HashMap extraHeaders = new HashMap<String, String>();
         HashMap extraParams = new HashMap<String, String>();
 
-        extraBody.put("1" , "1");
-        extraBody.put("2" , "2");
-        extraBody.put("3" , "3");
+        extraBody.put("1", "1");
+        extraBody.put("2", "2");
+        extraBody.put("3", "3");
 
-        extraHeaders.put("1","1");
-        extraHeaders.put("2","2");
-        extraHeaders.put("3","3");
+        extraHeaders.put("1", "1");
+        extraHeaders.put("2", "2");
+        extraHeaders.put("3", "3");
 
         extraParams.put("1", "1");
         extraParams.put("2", "2");
@@ -59,27 +59,23 @@ public class App extends Application {
         dapiEndpoints.setGetBalance("PATH"); //etc
 
 
-
-
         DapiConfigurations dapiConfigurations = new DapiConfigurations(
                 appKey,
                 baseUrl,
                 DapiEnvironment.SANDBOX,
-                supportedCountries,
-                "CLIENT_USER_ID", //If you don't set the clientUserID here, since it's optional, you'll need to add it later using dapiClient.setClientUserID() as shown below
-                false,
-                DapiTheme.ELECTRIC,
-                extraBody,
-                extraHeaders,
-                extraParams,
-                dapiEndpoints,
-                false
+                supportedCountries
         );
 
-        DapiClient dapiClient = new DapiClient(this, dapiConfigurations);
+        dapiConfigurations.setClientUserID("CLIENT_USER_ID");
+        dapiConfigurations.setExperimental(false);
+        dapiConfigurations.setColorScheme(ColorScheme.ELECTRIC);
+        dapiConfigurations.setExtraBody(extraBody);
+        dapiConfigurations.setExtraHeaders(extraHeaders);
+        dapiConfigurations.setExtraParams(extraParams);
+        dapiConfigurations.setEndPoints(dapiEndpoints);
+        dapiConfigurations.setAutoTruncate(false);
 
-        //Must be set before doing any operation.
-        //dapiClient.setClientUserID("id");
+        DapiClient dapiClient = new DapiClient(this, dapiConfigurations);
 
 
     }

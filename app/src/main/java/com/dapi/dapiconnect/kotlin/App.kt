@@ -4,10 +4,10 @@ package com.dapi.dapiconnect.kotlin
 import android.app.Application;
 
 import com.dapi.connect.core.enums.DapiEnvironment
-import com.dapi.connect.core.enums.DapiTheme
 import com.dapi.connect.data.models.DapiConfigurations
 import com.dapi.connect.data.models.DapiEndpoints
 import com.dapi.connect.core.base.DapiClient
+import com.dapi.connect.core.enums.ColorScheme
 import java.util.HashMap;
 
 /**
@@ -61,22 +61,19 @@ class App : Application() {
                 appKey,
                 baseUrl,
                 DapiEnvironment.SANDBOX,
-                supportedCountries,
-                "CLIENT_USER_ID", //If you don't set the clientUserID here, since it's optional, you'll need to add it later using dapiClient.setClientUserID() as shown below
-                false,
-                DapiTheme.ELECTRIC,
-                extraBody,
-                extraHeaders,
-                extraParams,
-                dapiEndpoints,
-                true
-        );
+                supportedCountries
+        )
+
+        dapiConfigurations.clientUserID = "CLIENT_USER_ID"
+        dapiConfigurations.isExperimental = false
+        dapiConfigurations.colorScheme = ColorScheme.ELECTRIC
+        dapiConfigurations.extraBody = extraBody
+        dapiConfigurations.extraHeaders = extraHeaders
+        dapiConfigurations.extraParams = extraParams
+        dapiConfigurations.endPoints = dapiEndpoints
+        dapiConfigurations.autoTruncate = true
 
         val dapiClient = DapiClient(this, dapiConfigurations);
-
-        //Must be set before doing any operation.
-        //dapiClient.setClientUserID("id");
-
 
     }
 }
