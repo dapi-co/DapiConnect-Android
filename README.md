@@ -44,21 +44,21 @@ This is a security feature that keeps control in your hands. Your server is resp
 	override fun onCreate() {
         super.onCreate()
 	
-	 DapiConfigurations dapiConfigurations = new DapiConfigurations(
+	val dapiConfigurations = DapiConfigurations(
                 appKey,
                 baseUrl,
                 DapiEnvironment.SANDBOX,
                 supportedCountries //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
-        );
+        )
 
-        dapiConfigurations.setClientUserID("CLIENT_USER_ID"); //your user ID, used to destinguish between different users on the same device
-        dapiConfigurations.setExperimental(false); //for showing experimental banks.
-        dapiConfigurations.setColorScheme(ColorScheme.GENERAL);
-        dapiConfigurations.setExtraBody(extraBody); //Body to add to all requests
-        dapiConfigurations.setExtraHeaders(extraHeaders); //Headers to add to all requests
-        dapiConfigurations.setExtraParams(extraParams); //Params to add to all requests
-        dapiConfigurations.setEndPoints(dapiEndpoints);
-        dapiConfigurations.setAutoTruncate(false); //to auto truncate beneficiary and transfer info
+        dapiConfigurations.clientUserID = "CLIENT_USER_ID" //your user ID, used to destinguish between different users on the same device
+        dapiConfigurations.isExperimental = false //for showing experimental banks.
+        dapiConfigurations.colorScheme = ColorScheme.GENERAL
+        dapiConfigurations.extraBody = extraBody //Body to add to all requests
+        dapiConfigurations.extraHeaders = extraHeaders //Headers to add to all requests
+        dapiConfigurations.extraParams = extraParams //Params to add to all requests
+        dapiConfigurations.endPoints = dapiEndpoints
+        dapiConfigurations.autoTruncate = true //to auto truncate beneficiary and transfer info
 
 	val dapiClient = DapiClient(this, dapiConfigurations)
 	val dapiClient2 = ...
