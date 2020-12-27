@@ -10,7 +10,6 @@ import com.dapi.connect.core.base.DapiClient;
 import com.dapi.connect.core.base.DapiConnect;
 import com.dapi.connect.core.callbacks.OnDapiConnectListener;
 import com.dapi.connect.core.callbacks.OnDapiTransferListener;
-import com.dapi.connect.data.endpoint_models.AccountsItem;
 import com.dapi.connect.data.endpoint_models.DapiAccount;
 import com.dapi.connect.data.models.DapiBeneficiaryInfo;
 import com.dapi.connect.data.models.DapiConnection;
