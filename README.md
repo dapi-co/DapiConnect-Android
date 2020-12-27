@@ -87,7 +87,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 
 	```kotlin
-	connect.listener = object : OnDapiConnectListener {
+	dapiClient.connect.listener = object : OnDapiConnectListener {
             override fun onConnectionFailure(error: DapiError, bankID: String) {
             }
 
@@ -149,7 +149,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 
 	```kotlin
-	autoFlow.transferListener = object : OnDapiTransferListener {
+	dapiClient.autoFlow.transferListener = object : OnDapiTransferListener {
 
             override fun onAutoFlowSuccessful(amount: Double, senderAccount: DapiAccount, recipientAccountID: String?, jobID: String) {
 
