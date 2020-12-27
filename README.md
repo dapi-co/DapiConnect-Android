@@ -82,7 +82,7 @@ This is a security feature that keeps control in your hands. Your server is resp
 	Responsible for showing credential input, authorization, authentication and a list of banks. You can receive callbacks by implementing `OnDapiConnectListener` interface.
 
 	```kotlin
-	val dapiClient = DapiClient.instances.first() //or val dapiClients = DapiClient.getInstances() to get all instances
+	val dapiClient = DapiClient.instances.first()
 	dapiClient.connect.present()
 	```
 
