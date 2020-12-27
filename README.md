@@ -44,20 +44,22 @@ This is a security feature that keeps control in your hands. Your server is resp
 	override fun onCreate() {
         super.onCreate()
 	
-	val dapiConfigurations = DapiConfigurations(
-            appKey, //Your app key
-            baseUrl, 
-            environment, //DapiEnvironment.SANDBOX or DapiEnvironment.PRODUCTION
-            supportedCountriesCodes, //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
-	    clientUserID, //OPTIONAL. your user ID, used to destinguish between different users on the same device
-            isExperimental, //OPTIONAL. for showing experimental banks.
-            theme, //OPTIONAL. DapiTheme.GENERAL or DapiTheme.ELEGANT or DapiTheme.ELECTRIC
-            extraHeaders, //OPTIONAL. Headers to add to all requests
-            extraParams, //OPTIONAL. Params to add to all requests
-            extraBody, //OPTIONAL. Body to add to all requests
-	    dapiEndPoints, //OPTIONAL. DapiEndpoints settings object for different endpoints
-		autoTruncate //OPTIONAl. to auto truncate beneficiary and transfer info 
-	)
+	 DapiConfigurations dapiConfigurations = new DapiConfigurations(
+                appKey,
+                baseUrl,
+                DapiEnvironment.SANDBOX,
+                supportedCountries //List of supported countries, fill up the countries you want to support using two-letter country codes (ISO 3166-1 alpha-2)
+        );
+
+        dapiConfigurations.setClientUserID("CLIENT_USER_ID"); //your user ID, used to destinguish between different users on the same device
+        dapiConfigurations.setExperimental(false); //for showing experimental banks.
+        dapiConfigurations.setColorScheme(ColorScheme.GENERAL);
+        dapiConfigurations.setExtraBody(extraBody); //Body to add to all requests
+        dapiConfigurations.setExtraHeaders(extraHeaders); //Headers to add to all requests
+        dapiConfigurations.setExtraParams(extraParams); //Params to add to all requests
+        dapiConfigurations.setEndPoints(dapiEndpoints);
+        dapiConfigurations.setAutoTruncate(false); //to auto truncate beneficiary and transfer info
+
 	val dapiClient = DapiClient(this, dapiConfigurations)
 	val dapiClient2 = ...
 
@@ -80,16 +82,16 @@ This is a security feature that keeps control in your hands. Your server is resp
 	Responsible for showing credential input, authorization, authentication and a list of banks. You can receive callbacks by implementing `OnDapiConnectListener` interface.
 
 	```kotlin
-	val dapiClient = DapiClient.getInstance() //or val dapiClients = DapiClient.getInstances() to get all instances
+	val dapiClient = DapiClient.instances.first() //or val dapiClients = DapiClient.getInstances() to get all instances
 	dapiClient.connect.present()
 	```
 
 	```kotlin
-	dapiClient.connect.setOnConnectListener(object : OnDapiConnectListener {
+	connect.listener = object : OnDapiConnectListener {
             override fun onConnectionFailure(error: DapiError, bankID: String) {
             }
 
-            override fun onConnectionSuccessful(userID: String, bankID: String) {
+            override fun onConnectionSuccessful(connection : DapiConnection) {
 
             }
 
@@ -123,10 +125,10 @@ This is a security feature that keeps control in your hands. Your server is resp
                                 phoneNumber
                         )
                 )
-               //beneficiaryInfo(null) or pass null if you don't want to use this
+
             }
 
-        })
+        }
 
 	```
 	
@@ -147,20 +149,20 @@ This is a security feature that keeps control in your hands. Your server is resp
 	```
 
 	```kotlin
-	dapiClient.autoFlow.setOnTransferListener(object : OnDapiTransferListener {
+	autoFlow.transferListener = object : OnDapiTransferListener {
 
-            override fun onAutoFlowSuccessful(amount: Double, senderAccount: AccountsItem, recipientAccountID: String?, jobID: String) {
-
-            }
-
-            override fun onAutoFlowFailure(error: DapiError, senderAccount: AccountsItem, recipientAccountID: String?) {
+            override fun onAutoFlowSuccessful(amount: Double, senderAccount: DapiAccount, recipientAccountID: String?, jobID: String) {
 
             }
 
-            override fun preAutoFlowTransfer(amount: Double, senderAccount: AccountsItem) {
+            override fun onAutoFlowFailure(error: DapiError, senderAccount: DapiAccount, recipientAccountID: String?) {
 
             }
-	    
+
+            override fun preAutoFlowTransfer(amount: Double, senderAccount: DapiAccount) {
+
+            }
+
             override fun setBeneficiaryInfoOnAutoFlow(bankID: String, beneficiaryInfo: (DapiBeneficiaryInfo) -> Unit) {
                 val linesAddress = LinesAddress()
                 linesAddress.line1 = "line1"
@@ -193,7 +195,7 @@ This is a security feature that keeps control in your hands. Your server is resp
             }
 
 
-        })
+        }
 	```
 3. Data, Payment, Metadata, Auth
 
