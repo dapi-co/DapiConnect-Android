@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         //Starting AutoFlow
         val autoFlowBtn = findViewById<Button>(R.id.autoFlow)
         autoFlowBtn.setOnClickListener { view: View? ->
-            //You may pass accountID and amount to navigate directly to the numpad
             autoFlow.present()
         }
 

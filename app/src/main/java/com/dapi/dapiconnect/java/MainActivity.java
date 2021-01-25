@@ -45,26 +45,18 @@ public class MainActivity extends AppCompatActivity {
         //Starting AutoFlow
         Button autoFlowBtn = findViewById(R.id.autoFlow);
         autoFlowBtn.setOnClickListener(view -> {
-            //You may pass accountID and amount to navigate directly to the numpad
             autoFlow.present();
         });
 
         //get cached connections
         connect.getConnections(dapiConnections -> {
-
-
-            //HERE
             //DapiClient will perform operations on this connection
             //For example, dapiClient.getData().getAccounts({}, {}) will be called on this connection
             dapiClient.setConnection(dapiConnections.get(0));
 
             return null;
         }, dapiError -> {
-
-
             //In case there are errors, you get them here.
-
-
             return null;
         });
 
