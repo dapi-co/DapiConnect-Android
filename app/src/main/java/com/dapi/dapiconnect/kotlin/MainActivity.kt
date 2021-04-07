@@ -4,257 +4,121 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.dapi.connect.core.base.DapiClient
+import com.dapi.connect.core.base.Dapi
 import com.dapi.connect.core.callbacks.OnDapiConnectListener
 import com.dapi.connect.core.callbacks.OnDapiTransferListener
-import com.dapi.connect.data.endpoint_models.*
-import com.dapi.connect.data.models.DapiBeneficiaryInfo
+import com.dapi.connect.data.endpoint_models.Accounts
+import com.dapi.connect.data.models.DapiBeneficiary
 import com.dapi.connect.data.models.DapiConnection
 import com.dapi.connect.data.models.DapiError
-import java.util.*
 import com.dapi.connect.data.models.LinesAddress
 import com.dapi.dapiconnect.R
+import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val dapiClient = DapiClient.instances.first()
-        val connect = dapiClient.connect
-        val autoFlow = dapiClient.autoFlow
-        //Starting Connect
+
+
         val connectBtn = findViewById<Button>(R.id.connect)
         connectBtn.setOnClickListener { view: View? ->
-            connect.present()
-        }
-
-        //Starting AutoFlow
-        val autoFlowBtn = findViewById<Button>(R.id.autoFlow)
-        autoFlowBtn.setOnClickListener { view: View? ->
-            autoFlow.present()
-        }
-
-        //get cached connections
-        connect.getConnections({
-            if (it.isNotEmpty()) {
-                //DapiClient will perform operations on this connection
-                //For example, dapiClient.data.getAccounts({}, {}) will be called on this connection
-                dapiClient.connection = it.first()
+            if (Dapi.isStarted){
+                Dapi.presentConnect()
             }
-
-        }) {
-
         }
+        Dapi.connectListener = this
 
-        //setting connect callbacks
-        connect.listener = object : OnDapiConnectListener {
-            //Called when the connection fails for any reason, you'll get info on the error in dapiError and logcat.
-            override fun onConnectionFailure(error: DapiError, bankID: String) {
-            }
-
-            //Called after successful connection.
-            override fun onConnectionSuccessful(connection : DapiConnection) {
-
-            }
-
-            //You may use this to add a beneficiary to the newly connected account once the connection is done
-            //Usually used when for example you're a seller and you want the newly connected account to add you as beneficiary Immediately
-            //Note: Some banks has something called coolDownPeriod for adding a beneficiary that may take upto 2 days, so
-            //by adding a beneficiary immediately here instead of adding the beneficiary when the buyer starts making a purchase,
-            //you're actually winning some time.
-
-            override fun setBeneficiaryInfoOnConnect(bankID: String, beneficiaryInfo: (DapiBeneficiaryInfo?) -> Unit) {
-
-                val linesAddress = LinesAddress()
-                linesAddress.line1 = "line1"
-                linesAddress.line2 = "line2"
-                linesAddress.line3 = "line3"
-                val accountNumber = "xxxx"
-                val name = "xxxx"
-                val bankName = "xxxx"
-                val swiftCode = "xxxx"
-                val iban = "xxxx"
-                val country = "xxxx"
-                val branchAddress = "xxxx"
-                val branchName = "xxxx"
-                val phoneNumber = "xxxx"
-                beneficiaryInfo(
-                        DapiBeneficiaryInfo
-                        (
-                                linesAddress,
-                                accountNumber,
-                                name,
-                                bankName,
-                                swiftCode,
-                                iban,
-                                country,
-                                branchAddress,
-                                branchName,
-                                phoneNumber
-                        )
-                )
-//                beneficiaryInfo(null) or pass null if you don't want to use this
-            }
-
-        }
-
-        //Setting autoflow callbacks
-        autoFlow.transferListener = object : OnDapiTransferListener {
-
-            //Called after a successful transfer
-            override fun onAutoFlowSuccessful(amount: Double, senderAccount: DapiAccount, recipientAccountID: String?, jobID: String) {
-
-            }
-
-            //Called when an error happens during making a transfer
-            override fun onAutoFlowFailure(error: DapiError, senderAccount: DapiAccount, recipientAccountID: String?) {
-
-            }
-
-            //Called when the user taps on Send button
-            override fun preAutoFlowTransfer(amount: Double, senderAccount: DapiAccount) {
-
-            }
-
-            //The beneficiary to send the money to.
-            override fun setBeneficiaryInfoOnAutoFlow(bankID: String, beneficiaryInfo: (DapiBeneficiaryInfo) -> Unit) {
-                val linesAddress = LinesAddress()
-                linesAddress.line1 = "line1"
-                linesAddress.line2 = "line2"
-                linesAddress.line3 = "line3"
-                val accountNumber = "xxxx"
-                val name = "xxxx"
-                val bankName = "xxxx"
-                val swiftCode = "xxxx"
-                val iban = "xxxx"
-                val country = "xxxx"
-                val branchAddress = "xxxx"
-                val branchName = "xxxx"
-                val phoneNumber = "xxxx"
-                beneficiaryInfo(
-                        DapiBeneficiaryInfo
-                        (
-                                linesAddress,
-                                accountNumber,
-                                name,
-                                bankName,
-                                swiftCode,
-                                iban,
-                                country,
-                                branchAddress,
-                                branchName,
-                                phoneNumber
-                        )
-                )
-            }
-
-
-        }
-        //        dapiClient.setConfigurations() //Used when you want to update DapiConfigurations at runtime
-
-
-        //**************Calling APIs************************
-
-        //get owner identity info
-        dapiClient.data.getIdentity(
-                {
-
+        val payBtn = findViewById<Button>(R.id.pay)
+        payBtn.setOnClickListener { view: View? ->
+            Dapi.getConnections({
+                if (it.isNotEmpty()){
+                    it.first().createTransfer(
+                        toBeneficiary = getBeneficiary()
+                    )
                 }
-        ) {
+            }, {
 
+            })
         }
 
-        //Get accounts of the connection
-        dapiClient.data.getAccounts(
-                {
-
-                }
-        ) {
-
-        }
-
-        //Get balance of some connected account
-        dapiClient.data.getBalance("accountID",
-                {
-
-                }
-        ) {
-
-        }
-
-        //Get transactions that took place between fromDate and toDate
-        val fromDate = Date()
-        val toDate = Date()
-        dapiClient.data.getTransactions("accountID", fromDate, toDate,
-                {
-
-                }
-        ) {
-
-        }
-
-        //Get metadata of the connected account
-        dapiClient.metadata.getAccountMetaData(
-                {
-
-                }
-        ) {
-
-        }
-
-        //Get beneficiaries of the connected account
-        dapiClient.payment.getBeneficiaries(
-                {
-
-                }
-        ) {
-
-        }
-
-//        Will NOT compile, add params to DapiBeneficiaryInfo
-//        Add beneficiary to the connected account
-//        dapiClient.payment.createBeneficiary(DapiBeneficiaryInfo(),
-//            {
-//
-//            }) {
-//
-//        }
-
-
-        //Send money from one account to another
-        dapiClient.payment.createTransfer(
-                "receiverID", "senderID", 1.0, "remark",
-                {
-
-                }
-        ) {
-
-        }
-
-        //Send money from one account to another
-        dapiClient.payment.createTransfer(
-                "iban", "name", "senderID", 1.0, "remark",
-                {
-
-                }
-        ) {
-
-        }
-
-        //Delink an account.
-        dapiClient.auth.delink(
-                {
-
-                }
-        ) {
-
-        }
+        Dapi.transferListener = this
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        val dapiClient = DapiClient.instances.first()
-        dapiClient.release()
+    private fun getBeneficiary(): DapiBeneficiary {
+        val lineAddress = LinesAddress()
+        lineAddress.line1 = "baniyas road"
+        lineAddress.line2 = "dubai"
+        lineAddress.line3 = "united arab emirates"
+
+        return DapiBeneficiary(
+            address = lineAddress,
+            accountNumber = "0959040184901",
+            name = "John Doe",
+            bankName = "Emirates NBD Bank PJSC",
+            swiftCode = "EBILAEAD",
+            iban = "AE140260000959040184901",
+            country = "UNITED ARAB EMIRATES",
+            branchAddress = "Baniyas Road Deira PO Box 777 Dubai UAE",
+            branchName = "Emirates NBD Bank PJSC",
+            phoneNumber = "+0585859206"
+        )
+
+    }
+
+    private fun connectionFunctionsExamples(connection: DapiConnection){
+        connection.getIdentity({
+
+        }, {
+
+        })
+
+        connection.getAccounts({
+
+        }, {
+
+        })
+
+        connection.getTransactions(
+            account = connection.accounts.first(),
+            fromDate = Date(),
+            toDate = Date(), {
+
+        }, {
+
+        })
+
+        connection.getAccountsMetaData({
+
+        }, {
+
+        })
+    }
+
+    //Connect callbacks
+    override fun onConnectionFailure(error: DapiError, bankID: String) {
+
+    }
+
+    override fun onConnectionSuccessful(connection: DapiConnection) {
+
+    }
+
+    override fun onDismissed() {
+
+    }
+
+    //Transfer callbacks
+    override fun onTransferFailure(account: Accounts.DapiAccount?, error: DapiError) {
+
+    }
+
+    override fun onTransferSuccess(account: Accounts.DapiAccount, amount: Int, reference: String?) {
+
+    }
+
+    override fun willTransferAmount(amount: Int, senderAccount: Accounts.DapiAccount) {
+
     }
 }

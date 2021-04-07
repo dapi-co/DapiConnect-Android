@@ -17,10 +17,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/autoFlow"
+        android:id="@+id/pay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AutoFlow"
+        android:text="Pay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintLeft_toLeftOf="parent"
