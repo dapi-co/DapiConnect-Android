@@ -1,4 +1,4 @@
-# DapiConnect-Androi
+# DapiConnect-Android
 This guide will show you how to integrate DapiConnect SDK for Android and use its components to interact with the API.
 
 
