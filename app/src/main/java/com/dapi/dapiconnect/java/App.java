@@ -2,7 +2,7 @@ package com.dapi.dapiconnect.java;
 
 import android.app.Application;
 
-import com.dapi.connect.core.base.Dapi;
+import co.dapi.connect.core.base.Dapi;
 
 /**
  * Created by Abdelrahman Rizq on 8/17/2020

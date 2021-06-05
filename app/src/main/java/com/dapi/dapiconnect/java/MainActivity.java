@@ -6,14 +6,14 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.dapi.connect.core.base.Dapi;
-import com.dapi.connect.core.callbacks.OnDapiConnectListener;
-import com.dapi.connect.core.callbacks.OnDapiTransferListener;
-import com.dapi.connect.data.endpoint_models.Accounts;
-import com.dapi.connect.data.models.DapiBeneficiary;
-import com.dapi.connect.data.models.DapiConnection;
-import com.dapi.connect.data.models.DapiError;
-import com.dapi.connect.data.models.LinesAddress;
+import co.dapi.connect.core.base.Dapi;
+import co.dapi.connect.core.callbacks.OnDapiConnectListener;
+import co.dapi.connect.core.callbacks.OnDapiTransferListener;
+import co.dapi.connect.data.endpoint_models.Accounts;
+import co.dapi.connect.data.models.DapiBeneficiary;
+import co.dapi.connect.data.models.DapiConnection;
+import co.dapi.connect.data.models.DapiError;
+import co.dapi.connect.data.models.LinesAddress;
 import com.dapi.dapiconnect.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -117,6 +117,11 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
 
     }
 
+    @Override
+    public void onBankRequest(@NotNull String s, @NotNull String s1) {
+
+    }
+
     //Transfer callbacks
     @Override
     public void onTransferFailure(@Nullable Accounts.DapiAccount dapiAccount, @NotNull DapiError dapiError) {
@@ -124,12 +129,18 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
     }
 
     @Override
-    public void onTransferSuccess(@NotNull Accounts.DapiAccount dapiAccount, int i, @Nullable String s) {
+    public void onTransferSuccess(@NotNull Accounts.DapiAccount dapiAccount, double v, @Nullable String s) {
 
     }
 
     @Override
-    public void willTransferAmount(int i, @NotNull Accounts.DapiAccount dapiAccount) {
+    public void onUiDismissed() {
 
     }
+
+    @Override
+    public void willTransferAmount(double v, @NotNull Accounts.DapiAccount dapiAccount) {
+
+    }
+
 }

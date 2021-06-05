@@ -2,7 +2,7 @@ package com.dapi.dapiconnect.kotlin
 
 
 import android.app.Application;
-import com.dapi.connect.core.base.Dapi
+import co.dapi.connect.core.base.Dapi
 
 
 /**

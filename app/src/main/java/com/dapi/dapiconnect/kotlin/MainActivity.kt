@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.dapi.connect.core.base.Dapi
-import com.dapi.connect.core.callbacks.OnDapiConnectListener
-import com.dapi.connect.core.callbacks.OnDapiTransferListener
-import com.dapi.connect.data.endpoint_models.Accounts
-import com.dapi.connect.data.models.DapiBeneficiary
-import com.dapi.connect.data.models.DapiConnection
-import com.dapi.connect.data.models.DapiError
-import com.dapi.connect.data.models.LinesAddress
+import co.dapi.connect.core.base.Dapi
+import co.dapi.connect.core.callbacks.OnDapiConnectListener
+import co.dapi.connect.core.callbacks.OnDapiTransferListener
+import co.dapi.connect.data.endpoint_models.Accounts
+import co.dapi.connect.data.models.DapiBeneficiary
+import co.dapi.connect.data.models.DapiConnection
+import co.dapi.connect.data.models.DapiError
+import co.dapi.connect.data.models.LinesAddress
 import com.dapi.dapiconnect.R
 import java.util.*
 
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
 
         val connectBtn = findViewById<Button>(R.id.connect)
         connectBtn.setOnClickListener { view: View? ->
-            if (Dapi.isStarted){
+            if (Dapi.isStarted) {
                 Dapi.presentConnect()
             }
         }
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         val payBtn = findViewById<Button>(R.id.pay)
         payBtn.setOnClickListener { view: View? ->
             Dapi.getConnections({
-                if (it.isNotEmpty()){
+                if (it.isNotEmpty()) {
                     it.first().createTransfer(
                         toBeneficiary = getBeneficiary()
                     )
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
 
     }
 
-    private fun connectionFunctionsExamples(connection: DapiConnection){
+    private fun connectionFunctionsExamples(connection: DapiConnection) {
         connection.getIdentity({
 
         }, {
@@ -83,11 +83,12 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         connection.getTransactions(
             account = connection.accounts.first(),
             fromDate = Date(),
-            toDate = Date(), {
+            toDate = Date(),
+            onSuccess = {
 
-        }, {
+            }, onFailure = {
 
-        })
+            })
 
         connection.getAccountsMetaData({
 
@@ -97,28 +98,41 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
     }
 
     //Connect callbacks
-    override fun onConnectionFailure(error: DapiError, bankID: String) {
+    override fun onBankRequest(bankName: String, iban: String) {
+        TODO("Not yet implemented")
+    }
 
+    override fun onConnectionFailure(error: DapiError, bankID: String) {
+        TODO("Not yet implemented")
     }
 
     override fun onConnectionSuccessful(connection: DapiConnection) {
-
+        TODO("Not yet implemented")
     }
 
     override fun onDismissed() {
-
+        TODO("Not yet implemented")
     }
 
     //Transfer callbacks
     override fun onTransferFailure(account: Accounts.DapiAccount?, error: DapiError) {
-
+        TODO("Not yet implemented")
     }
 
-    override fun onTransferSuccess(account: Accounts.DapiAccount, amount: Int, reference: String?) {
-
+    override fun onTransferSuccess(
+        account: Accounts.DapiAccount,
+        amount: Double,
+        reference: String?
+    ) {
+        TODO("Not yet implemented")
     }
 
-    override fun willTransferAmount(amount: Int, senderAccount: Accounts.DapiAccount) {
-
+    override fun onUiDismissed() {
+        TODO("Not yet implemented")
     }
+
+    override fun willTransferAmount(amount: Double, senderAccount: Accounts.DapiAccount) {
+        TODO("Not yet implemented")
+    }
+
 }
