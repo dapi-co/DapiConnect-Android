@@ -32,7 +32,7 @@ implementation "co.dapi:connect:2.5.0"
 1. Import Dapi in your Application class.
 
 ```kotlin
-import com.dapi.connect.core.base.Dapi;
+import co.dapi.connect.core.base.Dapi;
 ```
 
 2. Start the SDK with your configurations in onCreate method
