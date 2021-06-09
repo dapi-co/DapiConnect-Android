@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".java.MainActivity">
+    android:orientation="vertical"
+    android:gravity="center">
 
     <Button
-        android:id="@+id/connect"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnConnect"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Connect"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
     <Button
-        android:id="@+id/pay"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnCreateTransfer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.707" />
+        android:text="Create Transfer" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btnGetAccountsMetaData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Accounts MetaData" />
+
+    <Button
+        android:id="@+id/btnGetAccounts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Accounts" />
+
+    <Button
+        android:id="@+id/btnGetTransactions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Transactions" />
+
+    <Button
+        android:id="@+id/btnGetIdentity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Identity" />
+
+    <Button
+        android:id="@+id/btnGetBeneficiaries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Beneficiaries" />
+
+    <Button
+        android:id="@+id/btnCreateBeneficiary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Beneficiary" />
+</LinearLayout>

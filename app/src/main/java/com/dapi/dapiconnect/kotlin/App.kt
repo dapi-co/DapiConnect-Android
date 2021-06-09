@@ -2,6 +2,7 @@ package com.dapi.dapiconnect.kotlin
 
 
 import android.app.Application;
+import android.widget.Toast
 import co.dapi.connect.core.base.Dapi
 
 
@@ -14,9 +15,9 @@ class App : Application() {
         super.onCreate();
 
         Dapi.start(this, "uUL4dbYtNxqltz4KOIh6R_-yI47Huu0JpgPm1G6lYSw=", "JohnDoe", onSuccess = {
-
+            Toast.makeText(this, "Started", Toast.LENGTH_LONG).show()
         }, onFailure = {
-
+            Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
         })
     }
 }

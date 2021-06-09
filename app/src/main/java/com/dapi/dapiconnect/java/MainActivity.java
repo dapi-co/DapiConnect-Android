@@ -3,6 +3,7 @@ package com.dapi.dapiconnect.java;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,12 +15,20 @@ import co.dapi.connect.data.models.DapiBeneficiary;
 import co.dapi.connect.data.models.DapiConnection;
 import co.dapi.connect.data.models.DapiError;
 import co.dapi.connect.data.models.LinesAddress;
+
 import com.dapi.dapiconnect.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import static com.dapi.dapiconnect.kotlin.MainActivity.DAPI_NOT_STARTED;
+import static com.dapi.dapiconnect.kotlin.MainActivity.GET_ACCOUNTS_REQUIRED;
+import static com.dapi.dapiconnect.kotlin.MainActivity.MONTH_MILLIS;
+import static com.dapi.dapiconnect.kotlin.MainActivity.RESULT_PRINTED;
 
 public class MainActivity extends AppCompatActivity implements OnDapiConnectListener, OnDapiTransferListener {
 
@@ -28,27 +37,114 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button connectBtn = findViewById(R.id.connect);
-        connectBtn.setOnClickListener(view -> {
+        Button btnConnect = findViewById(R.id.btnConnect);
+        Button btnCreateTransfer = findViewById(R.id.btnCreateTransfer);
+        Button btnGetAccountsMetaData = findViewById(R.id.btnGetAccountsMetaData);
+        Button btnGetAccounts = findViewById(R.id.btnGetAccounts);
+        Button btnGetTransactions = findViewById(R.id.btnGetTransactions);
+        Button btnGetIdentity = findViewById(R.id.btnGetIdentity);
+        Button btnGetBeneficiaries = findViewById(R.id.btnGetBeneficiaries);
+        Button btnCreateBeneficiary = findViewById(R.id.btnCreateBeneficiary);
+
+
+        Dapi.setConnectListener(this);
+        Dapi.setTransferListener(this);
+
+        btnConnect.setOnClickListener((view) -> {
             if (Dapi.isStarted()) {
                 Dapi.presentConnect();
             }
         });
-        Dapi.setConnectListener(this);
 
-        Button payBtn = findViewById(R.id.pay);
-        payBtn.setOnClickListener(view -> {
-            Dapi.getConnections(connections -> {
-                if (connections.size() > 0) {
-                    connections.get(0).createTransfer(null, getBeneficiary());
-                }
-                return null;
-            }, error -> {
-                return null;
+        btnCreateTransfer.setOnClickListener((view) -> {
+           getFirstConnection((connection -> {
+               connection.createTransfer(null, getBeneficiary());
+           }));
+        });
+
+        btnGetAccountsMetaData.setOnClickListener((view) -> {
+            getFirstConnection((connection) -> {
+                connection.getAccountsMetaData((accountsMetaData) -> {
+                        Log.i("DapiResponse", accountsMetaData.toString());
+                        toast(RESULT_PRINTED);
+                        return null;
+                }, (error) -> {
+                        toast(error.getMessage());
+                        return null;
+                });
             });
         });
 
-        Dapi.setTransferListener(this);
+        btnGetAccounts.setOnClickListener((view) -> {
+            getFirstConnection((connection) -> {
+                connection.getAccounts((accounts) -> {
+                    Log.i("DapiResponse", accounts.toString());
+                    toast(RESULT_PRINTED);
+                    return null;
+                }, (error) -> {
+                    toast(error.getMessage());
+                    return null;
+                });
+            });
+        });
+
+        btnGetTransactions.setOnClickListener((view) -> {
+            getFirstConnection((connection) -> {
+                if (connection.getAccounts() == null || connection.getAccounts().isEmpty()) {
+                    toast(GET_ACCOUNTS_REQUIRED);
+                } else {
+                    connection.getTransactions(connection.getAccounts().get(0),new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS) ,(transactions) -> {
+                        Log.i("DapiResponse", transactions.toString());
+                        toast(RESULT_PRINTED);
+                        return null;
+                    }, (error) -> {
+                        toast(error.getMessage());
+                        return null;
+                    });
+                }
+
+            });
+        });
+
+        btnGetIdentity.setOnClickListener((view) -> {
+            getFirstConnection((connection) -> {
+                connection.getIdentity((identity) -> {
+                    Log.i("DapiResponse", identity.toString());
+                    toast(RESULT_PRINTED);
+                    return null;
+                }, (error) -> {
+                    toast(error.getMessage());
+                    return null;
+                });
+            });
+        });
+
+        btnGetBeneficiaries.setOnClickListener((view) -> {
+            getFirstConnection((connection) -> {
+                connection.getBeneficiaries((beneficiaries) -> {
+                    Log.i("DapiResponse", beneficiaries.toString());
+                    toast(RESULT_PRINTED);
+                    return null;
+                }, (error) -> {
+                    toast(error.getMessage());
+                    return null;
+                });
+            });
+        });
+
+        btnCreateBeneficiary.setOnClickListener((view) -> {
+            getFirstConnection((connection) -> {
+                connection.createBeneficiary(getBeneficiary(), (createBeneficiary) -> {
+                    Log.i("DapiResponse", createBeneficiary.toString());
+                    toast(RESULT_PRINTED);
+                    return null;
+                }, (error) -> {
+                    toast(error.getMessage());
+                    return null;
+                });
+            });
+        });
+
     }
 
     private DapiBeneficiary getBeneficiary() {
@@ -100,6 +196,19 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
         });
     }
 
+    private void getFirstConnection(ConnectionCallback connectionCallback) {
+        if (Dapi.isStarted()) {
+            Dapi.getConnections((connections) -> {
+                connectionCallback.call(connections.get(0));
+                return null;
+            }, (error) -> {
+                toast(error.getMessage());
+                return null;
+            });
+        } else {
+            toast(DAPI_NOT_STARTED);
+        }
+    }
 
     //Connect callbacks
     @Override
@@ -141,6 +250,18 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
     @Override
     public void willTransferAmount(double v, @NotNull Accounts.DapiAccount dapiAccount) {
 
+    }
+
+    private void toast(String message) {
+        Toast.makeText(
+                this,
+                message,
+                Toast.LENGTH_LONG
+        ).show();
+    }
+
+    private interface ConnectionCallback {
+        void call(DapiConnection connection);
     }
 
 }
