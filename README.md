@@ -22,7 +22,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 1. Update your build.gradle file to include
 
 ```kotlin
-implementation "co.dapi:connect:2.5.0"
+implementation "co.dapi:connect:2.7.0"
 ```
 
 2. Sync the project
