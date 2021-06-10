@@ -14,7 +14,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate();
 
-        Dapi.start(this, "APP_KEY", "JohnDoe", onSuccess = {
+        Dapi.start(this, "1d4592c4a8dd6ff75261e57eb3f80c518d7857d6617769af3f8f04b0590baceb", "JohnDoe", onSuccess = {
             Toast.makeText(this, "Started", Toast.LENGTH_LONG).show()
         }, onFailure = {
             Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
