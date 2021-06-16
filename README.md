@@ -22,7 +22,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 1. Update your build.gradle file to include
 
 ```kotlin
-implementation "co.dapi:connect:2.8.1"
+implementation "co.dapi:connect:2.8.3"
 ```
 
 2. Sync the project
@@ -131,9 +131,9 @@ Here we will pick the first account in the connection object. Remember, a bank c
 
 ```kotlin
 connection.createTransfer(
-	fromAccount = connection.accounts.first(),
-	amount = amount
-})
+    fromAccount = connection.accounts?.first(),
+    amount = amount
+)
 ```
 
 Now let's try sending money `to` an external account.
@@ -188,7 +188,7 @@ Implement OnDapiTransferListener to handle a successful or a failed transfer att
 ```kotlin
 Dapi.transferListener = object : OnDapiTransferListener {    
     override fun onTransferSuccess(
-        account: Accounts.DapiAccount,
+        account: DapiAccountsResponse.DapiAccount,
         amount: Double,
         reference: String?
     ) {
@@ -196,7 +196,7 @@ Dapi.transferListener = object : OnDapiTransferListener {
     }
 
     override fun onTransferFailure(
-        account: Accounts.DapiAccount?,
+        account: DapiAccountsResponse.DapiAccount?,
         error: DapiError
     ) {
         
@@ -204,7 +204,7 @@ Dapi.transferListener = object : OnDapiTransferListener {
     
     override fun willTransferAmount(
         amount: Double,
-        senderAccount: Accounts.DapiAccount
+        senderAccount: DapiAccountsResponse.DapiAccount
     ) {
         
     }
