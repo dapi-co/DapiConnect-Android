@@ -53,4 +53,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Beneficiary" />
+
+    <Button
+        android:id="@+id/btnGetCards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Cards" />
+
+    <Button
+        android:id="@+id/btnGetTransactionsForCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Transactions For Card" />
 </LinearLayout>

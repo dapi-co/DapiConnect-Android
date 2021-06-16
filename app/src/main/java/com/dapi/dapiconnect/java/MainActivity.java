@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import co.dapi.connect.core.base.Dapi;
 import co.dapi.connect.core.callbacks.OnDapiConnectListener;
 import co.dapi.connect.core.callbacks.OnDapiTransferListener;
-import co.dapi.connect.data.endpoint_models.Accounts;
+import co.dapi.connect.data.endpoint_models.DapiAccountsResponse;
 import co.dapi.connect.data.models.DapiBeneficiary;
 import co.dapi.connect.data.models.DapiConnection;
 import co.dapi.connect.data.models.DapiError;
@@ -22,8 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static com.dapi.dapiconnect.kotlin.MainActivity.DAPI_NOT_STARTED;
 import static com.dapi.dapiconnect.kotlin.MainActivity.GET_ACCOUNTS_REQUIRED;
@@ -57,20 +55,20 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
         });
 
         btnCreateTransfer.setOnClickListener((view) -> {
-           getFirstConnection((connection -> {
-               connection.createTransfer(null, getBeneficiary());
-           }));
+            getFirstConnection((connection -> {
+                connection.createTransfer(null, getBeneficiary());
+            }));
         });
 
         btnGetAccountsMetaData.setOnClickListener((view) -> {
             getFirstConnection((connection) -> {
                 connection.getAccountsMetaData((accountsMetaData) -> {
-                        Log.i("DapiResponse", accountsMetaData.toString());
-                        toast(RESULT_PRINTED);
-                        return null;
+                    Log.i("DapiResponse", accountsMetaData.toString());
+                    toast(RESULT_PRINTED);
+                    return null;
                 }, (error) -> {
-                        toast(error.getMessage());
-                        return null;
+                    toast(error.getMessage());
+                    return null;
                 });
             });
         });
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
                 if (connection.getAccounts() == null || connection.getAccounts().isEmpty()) {
                     toast(GET_ACCOUNTS_REQUIRED);
                 } else {
-                    connection.getTransactions(connection.getAccounts().get(0),new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS) ,(transactions) -> {
+                    connection.getTransactions(connection.getAccounts().get(0), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS), (transactions) -> {
                         Log.i("DapiResponse", transactions.toString());
                         toast(RESULT_PRINTED);
                         return null;
@@ -233,12 +231,12 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
 
     //Transfer callbacks
     @Override
-    public void onTransferFailure(@Nullable Accounts.DapiAccount dapiAccount, @NotNull DapiError dapiError) {
+    public void onTransferFailure(@Nullable DapiAccountsResponse.DapiAccount dapiAccount, @NotNull DapiError dapiError) {
 
     }
 
     @Override
-    public void onTransferSuccess(@NotNull Accounts.DapiAccount dapiAccount, double v, @Nullable String s) {
+    public void onTransferSuccess(@NotNull DapiAccountsResponse.DapiAccount dapiAccount, double v, @Nullable String s) {
 
     }
 
@@ -248,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
     }
 
     @Override
-    public void willTransferAmount(double v, @NotNull Accounts.DapiAccount dapiAccount) {
+    public void willTransferAmount(double v, @NotNull DapiAccountsResponse.DapiAccount dapiAccount) {
 
     }
 

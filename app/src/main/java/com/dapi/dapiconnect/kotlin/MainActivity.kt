@@ -9,12 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import co.dapi.connect.core.base.Dapi
 import co.dapi.connect.core.callbacks.OnDapiConnectListener
 import co.dapi.connect.core.callbacks.OnDapiTransferListener
-import co.dapi.connect.data.endpoint_models.Accounts
+import co.dapi.connect.data.endpoint_models.DapiAccountsResponse
 import co.dapi.connect.data.models.DapiBeneficiary
 import co.dapi.connect.data.models.DapiConnection
 import co.dapi.connect.data.models.DapiError
 import co.dapi.connect.data.models.LinesAddress
 import com.dapi.dapiconnect.R
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         const val RESULT_PRINTED = "Result is printed on the console"
         const val GET_ACCOUNTS_REQUIRED =
             "A successful GetAccounts call is required before doing the operation"
+        const val GET_CARDS_REQUIRED =
+            "A successful GetCards call is required before doing the operation"
         const val MONTH_MILLIS = 2629800000
     }
 
@@ -132,6 +135,32 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             }
         }
 
+        btnGetCards.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.getCards({
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
+
+        btnGetTransactionsForCard.setOnClickListener { view: View? ->
+            getFirstConnection {
+                if (it.cards.isNullOrEmpty()) {
+                    toast(GET_CARDS_REQUIRED)
+                } else {
+                    it.getTransactions(it.cards!!.first(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis() - MONTH_MILLIS), {
+                        Log.i("DapiResponse", it.toString())
+                        toast(RESULT_PRINTED)
+                    }, {
+                        toast(it.message!!)
+                    })
+                }
+            }
+        }
+
 
     }
 
@@ -201,12 +230,12 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
     }
 
     //Transfer callbacks
-    override fun onTransferFailure(account: Accounts.DapiAccount?, error: DapiError) {
+    override fun onTransferFailure(account: DapiAccountsResponse.DapiAccount?, error: DapiError) {
        toast(error.message!!)
     }
 
     override fun onTransferSuccess(
-        account: Accounts.DapiAccount,
+        account: DapiAccountsResponse.DapiAccount,
         amount: Double,
         reference: String?
     ) {
@@ -217,7 +246,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         toast("Transfer UI Dismissed")
     }
 
-    override fun willTransferAmount(amount: Double, senderAccount: Accounts.DapiAccount) {
+    override fun willTransferAmount(amount: Double, senderAccount: DapiAccountsResponse.DapiAccount) {
         toast("UI will send $amount")
     }
 
