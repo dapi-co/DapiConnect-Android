@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
     }
 
     override fun onConnectionSuccessful(connection: DapiConnection) {
-        toast("Successful connection")
+       toast("Successful connection, name:${connection.name}")
     }
 
     override fun onDismissed() {
