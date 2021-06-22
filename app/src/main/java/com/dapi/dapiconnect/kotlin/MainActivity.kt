@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                 if (it.accounts.isNullOrEmpty()) {
                     toast(GET_ACCOUNTS_REQUIRED)
                 } else {
-                    it.getTransactions(it.accounts!!.first(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis() - MONTH_MILLIS), {
+                    it.getTransactions(it.accounts!!.first(), Date(System.currentTimeMillis() - MONTH_MILLIS), Date(System.currentTimeMillis()), {
                         Log.i("DapiResponse", it.toString())
                         toast(RESULT_PRINTED)
                     }, {
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                 if (it.cards.isNullOrEmpty()) {
                     toast(GET_CARDS_REQUIRED)
                 } else {
-                    it.getTransactions(it.cards!!.first(), Date(System.currentTimeMillis()), Date(System.currentTimeMillis() - MONTH_MILLIS), {
+                    it.getTransactions(it.cards!!.first(), Date(System.currentTimeMillis() - MONTH_MILLIS), Date(System.currentTimeMillis()), {
                         Log.i("DapiResponse", it.toString())
                         toast(RESULT_PRINTED)
                     }, {
