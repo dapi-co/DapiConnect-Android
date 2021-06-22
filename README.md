@@ -32,7 +32,7 @@ implementation "co.dapi:connect:2.8.4"
 1. Import Dapi in your Application class.
 
 ```kotlin
-import co.dapi.connect.core.base.Dapi;
+import co.dapi.connect.core.base.Dapi
 ```
 
 2. Start the SDK with your configurations in onCreate method
@@ -91,7 +91,7 @@ Now lets add some functionality to your integration.
 
 ## Dapi's Functions
 
-There are 7 main functions that you will use to interact with the SDK.
+There are 9 main functions that you will use to interact with the SDK.
 
 ### **Create Transfer**
 
@@ -162,7 +162,7 @@ phoneNumber = "+0585859206"
 )
 
 connection.createTransfer(
-	fromAccount = connection.accounts.first(),
+	fromAccount = connection.accounts!!.first(),
 	toBeneficiary = beneficiary,
 	amount = amount
 )
@@ -174,7 +174,7 @@ Also, you may send money to an existing beneficiary using `createTransferToExist
 ```kotlin
 connection.getBeneficiaries({ beneficiaries ->
     connection.createTransferToExistingBeneficiary(
-        fromAccount = connection.accounts.first(),
+        fromAccount = connection.accounts!!.first(),
         toBeneficiaryID = beneficiaries.beneficiaries!!.first().id,
         amount = amount,
     )
@@ -230,6 +230,20 @@ connection.getAccounts(
 	})
 ```
 
+### Get Cards
+
+Each bank `connection` will have a list of `cards`.
+
+```kotlin
+connection.getCards(
+	onSuccess = { cards ->  
+                      
+	}, 
+	onFailure = { error -> 
+                            
+	})
+```
+
 ### Get Identity
 
 Get the identity information that has been confirmed by the bank.
@@ -253,7 +267,7 @@ connection.getIdentity(
 	})
 ```
 
-### Get Transactions
+### Account - Get Transactions
 
 We can get the list of transactions for each account.
 
@@ -261,7 +275,26 @@ You first have to pick an account for which you would like to access the data. Y
 
 ```kotlin
 connection.getTransactions(
-	account = connection.accounts.first(),
+	account = connection.accounts!!.first(),
+	fromDate = Date(),
+	toDate = Date(),
+	onSuccess = { transactions -> 
+
+	},
+	onFailure = { error -> 
+
+	})
+```
+
+### Card - Get Transactions
+
+We can get the list of transactions for each card.
+
+You first have to pick a card for which you would like to access the data. You then need to provide a `from` and `to` fields for the dates. These are optional and if they aren't provided we will just fetch the transactions as far back as the bank will allow us to.
+
+```kotlin
+connection.getTransactions(
+	card = connection.cards!!.first(),
 	fromDate = Date(),
 	toDate = Date(),
 	onSuccess = { transactions -> 
