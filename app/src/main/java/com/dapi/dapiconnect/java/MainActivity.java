@@ -165,35 +165,6 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
         );
     }
 
-    private void connectionFunctionsExamples(DapiConnection connection) {
-        connection.getIdentity(identity -> {
-            return null;
-        }, error -> {
-            return null;
-        });
-
-        connection.getAccounts(accounts -> {
-            return null;
-        }, error -> {
-            return null;
-        });
-
-        connection.getTransactions(
-                connection.getAccounts().get(0),
-                new Date(),
-                new Date(), transactions -> {
-                    return null;
-                }, error -> {
-                    return null;
-                });
-
-        connection.getAccountsMetaData(accountsMetaData -> {
-            return null;
-        }, error -> {
-            return null;
-        });
-    }
-
     private void getFirstConnection(ConnectionCallback connectionCallback) {
         if (Dapi.isStarted()) {
             Dapi.getConnections((connections) -> {
