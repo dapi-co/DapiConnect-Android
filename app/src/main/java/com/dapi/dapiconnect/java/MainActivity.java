@@ -181,12 +181,12 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
 
     //Connect callbacks
     @Override
-    public void onConnectionSuccessful(@NotNull DapiConnection dapiConnection) {
+    public void onConnectionSuccessful(@NotNull DapiConnection connection) {
 
     }
 
     @Override
-    public void onConnectionFailure(@NotNull DapiError dapiError, @NotNull String bankID) {
+    public void onConnectionFailure(@NotNull DapiError error, @NotNull String bankID) {
 
     }
 
@@ -196,18 +196,18 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
     }
 
     @Override
-    public void onBankRequest(@NotNull String s, @NotNull String s1) {
+    public void onBankRequest(@NotNull String bankName, @NotNull String iban) {
 
     }
 
     //Transfer callbacks
     @Override
-    public void onTransferFailure(@Nullable DapiAccountsResponse.DapiAccount dapiAccount, @NotNull DapiError dapiError) {
+    public void onTransferFailure(@Nullable DapiAccountsResponse.DapiAccount account, @NotNull DapiError error) {
 
     }
 
     @Override
-    public void onTransferSuccess(@NotNull DapiAccountsResponse.DapiAccount dapiAccount, double v, @Nullable String s) {
+    public void onTransferSuccess(@NotNull DapiAccountsResponse.DapiAccount account, double amount, @Nullable String reference, String operationID) {
 
     }
 

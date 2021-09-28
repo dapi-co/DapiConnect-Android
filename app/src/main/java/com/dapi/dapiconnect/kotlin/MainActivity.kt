@@ -92,12 +92,17 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                 if (it.accounts.isNullOrEmpty()) {
                     toast(GET_ACCOUNTS_REQUIRED)
                 } else {
-                    it.getTransactions(it.accounts!!.first(), Date(System.currentTimeMillis() - MONTH_MILLIS), Date(System.currentTimeMillis()), {
-                        Log.i("DapiResponse", it.toString())
-                        toast(RESULT_PRINTED)
-                    }, {
-                        toast(it.message!!)
-                    })
+                    it.getTransactions(
+                        it.accounts!!.first(),
+                        Date(System.currentTimeMillis() - MONTH_MILLIS),
+                        Date(System.currentTimeMillis()),
+                        {
+                            Log.i("DapiResponse", it.toString())
+                            toast(RESULT_PRINTED)
+                        },
+                        {
+                            toast(it.message!!)
+                        })
                 }
             }
         }
@@ -151,12 +156,17 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                 if (it.cards.isNullOrEmpty()) {
                     toast(GET_CARDS_REQUIRED)
                 } else {
-                    it.getTransactions(it.cards!!.first(), Date(System.currentTimeMillis() - MONTH_MILLIS), Date(System.currentTimeMillis()), {
-                        Log.i("DapiResponse", it.toString())
-                        toast(RESULT_PRINTED)
-                    }, {
-                        toast(it.message!!)
-                    })
+                    it.getTransactions(
+                        it.cards!!.first(),
+                        Date(System.currentTimeMillis() - MONTH_MILLIS),
+                        Date(System.currentTimeMillis()),
+                        {
+                            Log.i("DapiResponse", it.toString())
+                            toast(RESULT_PRINTED)
+                        },
+                        {
+                            toast(it.message!!)
+                        })
                 }
             }
         }
@@ -217,12 +227,12 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         toast("bankName: $bankName, iban: $iban")
     }
 
-    override fun onConnectionFailure(error: DapiError, bankID: String) {
+    override fun onConnectionFailure(error: DapiError, bankID: String?) {
         toast(error.message!!)
     }
 
     override fun onConnectionSuccessful(connection: DapiConnection) {
-       toast("Successful connection, name:${connection.name}")
+        toast("Successful connection, name:${connection.name}")
     }
 
     override fun onDismissed() {
@@ -231,13 +241,17 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
 
     //Transfer callbacks
     override fun onTransferFailure(account: DapiAccountsResponse.DapiAccount?, error: DapiError) {
-       toast(error.message!!)
+        toast(error.message!!)
+        if (error.type == DapiError.INVALID_CONNECTION) {
+            Dapi.presentConnect()
+        }
     }
 
     override fun onTransferSuccess(
         account: DapiAccountsResponse.DapiAccount,
         amount: Double,
-        reference: String?
+        reference: String?,
+        operationID: String?
     ) {
         toast("Successful transfer, reference: $reference")
     }
@@ -246,7 +260,10 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         toast("Transfer UI Dismissed")
     }
 
-    override fun willTransferAmount(amount: Double, senderAccount: DapiAccountsResponse.DapiAccount) {
+    override fun willTransferAmount(
+        amount: Double,
+        senderAccount: DapiAccountsResponse.DapiAccount
+    ) {
         toast("UI will send $amount")
     }
 
