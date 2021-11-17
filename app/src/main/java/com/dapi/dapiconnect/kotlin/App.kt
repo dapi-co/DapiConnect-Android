@@ -15,12 +15,15 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate();
-
-        Dapi.start(this, "APP_KEY", "JohnDoe",
-            configurations = DapiConfigurations(environment = DapiEnvironment.SANDBOX), onSuccess = {
-            Toast.makeText(this, "Started", Toast.LENGTH_LONG).show()
-        }, onFailure = {
-            Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-        })
+        Dapi.start(this,
+            "APP_KEY",
+            "JohnDoe",
+            configurations = DapiConfigurations(environment = DapiEnvironment.SANDBOX),
+            onSuccess = {
+                Toast.makeText(this, "Started", Toast.LENGTH_LONG).show()
+            },
+            onFailure = {
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+            })
     }
 }
