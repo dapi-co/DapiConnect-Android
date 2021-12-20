@@ -17,9 +17,9 @@ You can check out our [API Reference](https://dapi-api.readme.io/docs/how-to-int
 ## Run The Example App
 
 1. Clone the repository.
-2. Open `App.kt` and replace APP_KEY with your real appKey
+2. Open `App.kt` and replace `APP_KEY` with your real appKey
 3. Open build.gradle and replace applicationId value `com.dapi.app` with your real applicationId.
 4. Sync gradle and run the app.
-5. Click `CONNECT` button to select your bank and enter credentials to login through Dapi.
+5. Click `Connect` button to select your bank and enter credentials to login through Dapi.
 6. After a successful connection, a DapiConnection object is generated and used for making calls to Dapi endpoints that you can call by clicking on any of the buttons like `Get Identity` and `CreateTransfer`.
 
