@@ -4,14 +4,22 @@ This guide will show you how to integrate DapiConnect SDK for Android and use it
 
 # Dapi Android SDK
 
-## Overview
-
-### Introduction
+## Introduction
 
 Dapi for Android is a prebuilt SDK that reduces the time it takes to integrate with Dapi's API and gain access to your users financial data.
 
 The SDK provides direct access to Dapi endpoints and offers optional UI to manage users' accounts and money transfer.
 
-## Integration
+## API Reference
 
-Integration instructions [here.](https://dapi-api.readme.io/docs/quickstart-1)
+You can check out our [API Reference](https://dapi-api.readme.io/docs/how-to-integrate-with-android-sdk) for detailed information about our SDK.
+
+## Run The Example App
+
+1. Clone the repository.
+2. Open `App.kt` and replace APP_KEY with your real appKey
+3. Open build.gradle and replace applicationId value `com.dapi.app` with your real applicationId.
+4. Sync gradle and run the app.
+5. Click `CONNECT` button to select your bank and enter credentials to login through Dapi.
+6. After a successful connection, a DapiConnection object is generated and used for making calls to Dapi endpoints that you can call by clicking on any of the buttons like `Get Identity` and `CreateTransfer`.
+
