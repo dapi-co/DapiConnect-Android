@@ -10,14 +10,14 @@ Dapi for Android is a prebuilt SDK that reduces the time it takes to integrate w
 
 The SDK provides direct access to Dapi endpoints and offers optional UI to manage users' accounts and money transfer.
 
-## API Reference
+## Integration
 
-You can check out our [API Reference](https://dapi-api.readme.io/docs/how-to-integrate-with-android-sdk) for detailed information about our SDK.
+You can check out our [Android Integration Guide](https://dapi-api.readme.io/docs/how-to-integrate-with-android-sdk) for detailed information about our SDK.
 
 ## Run The Example App
 
-1. Clone the repository.
-2. Open `App.kt` and replace `APP_KEY` with your real appKey
+1. Clone and open the project on Android Studio.
+2. Open `App.kt` and replace `APP_KEY` with your real appKey. Can be obtained from [DAPI Dashboard](https://dashboard.cf.dapi.co/)
 3. Open build.gradle and replace applicationId value `com.dapi.app` with your real applicationId.
 4. Sync gradle and run the app.
 5. Click `Connect` button to select your bank and enter credentials to login through Dapi.
