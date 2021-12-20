@@ -10,16 +10,16 @@ import co.dapi.connect.core.base.Dapi
 import co.dapi.connect.core.callbacks.OnDapiConnectListener
 import co.dapi.connect.core.callbacks.OnDapiTransferListener
 import co.dapi.connect.data.endpoint_models.DapiAccountsResponse
-import co.dapi.connect.data.models.DapiBeneficiary
-import co.dapi.connect.data.models.DapiConnection
-import co.dapi.connect.data.models.DapiError
-import co.dapi.connect.data.models.LinesAddress
+import co.dapi.connect.data.models.*
 import com.dapi.dapiconnect.R
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferListener {
+
+    private var beneficiaryID : String? = null
+    private var wireBeneficiaryID : String? = null
 
     //ERRORS
     companion object {
@@ -31,23 +31,14 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             "A successful GetAccounts call is required before doing the operation"
         const val GET_CARDS_REQUIRED =
             "A successful GetCards call is required before doing the operation"
+        const val GET_BENEFICIARIES_REQUIRED =
+            "A successful GetBeneficiaries call is required before doing the operation"
         const val MONTH_MILLIS = 2629800000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val btnConnect = findViewById<Button>(R.id.btnConnect)
-        val btnCreateTransfer = findViewById<Button>(R.id.btnCreateTransfer)
-        val btnGetAccountsMetaData = findViewById<Button>(R.id.btnGetAccountsMetaData)
-        val btnGetAccounts = findViewById<Button>(R.id.btnGetAccounts)
-        val btnGetTransactions = findViewById<Button>(R.id.btnGetTransactions)
-        val btnGetIdentity = findViewById<Button>(R.id.btnGetIdentity)
-        val btnGetBeneficiaries = findViewById<Button>(R.id.btnGetBeneficiaries)
-        val btnCreateBeneficiary = findViewById<Button>(R.id.btnCreateBeneficiary)
-
-
         Dapi.connectListener = this
         Dapi.transferListener = this
 
@@ -57,17 +48,9 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             }
         }
 
-        btnCreateTransfer.setOnClickListener { view: View? ->
+        btnGetIdentity.setOnClickListener { view: View? ->
             getFirstConnection {
-                it.createTransfer(
-                    toBeneficiary = getBeneficiary()
-                )
-            }
-        }
-
-        btnGetAccountsMetaData.setOnClickListener { view: View? ->
-            getFirstConnection {
-                it.getAccountsMetaData({
+                it.getIdentity({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
                 }, {
@@ -87,6 +70,18 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             }
         }
 
+        btnGetCards.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.getCards({
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
+
+
         btnGetTransactions.setOnClickListener { view: View? ->
             getFirstConnection {
                 if (it.accounts.isNullOrEmpty()) {
@@ -104,50 +99,6 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                             toast(it.message!!)
                         })
                 }
-            }
-        }
-
-        btnGetIdentity.setOnClickListener { view: View? ->
-            getFirstConnection {
-                it.getIdentity({
-                    Log.i("DapiResponse", it.toString())
-                    toast(RESULT_PRINTED)
-                }, {
-                    toast(it.message!!)
-                })
-            }
-        }
-
-        btnGetBeneficiaries.setOnClickListener { view: View? ->
-            getFirstConnection {
-                it.getBeneficiaries({
-                    Log.i("DapiResponse", it.toString())
-                    toast(RESULT_PRINTED)
-                }, {
-                    toast(it.message!!)
-                })
-            }
-        }
-
-        btnCreateBeneficiary.setOnClickListener { view: View? ->
-            getFirstConnection {
-                it.createBeneficiary(getBeneficiary(), {
-                    Log.i("DapiResponse", it.toString())
-                    toast(RESULT_PRINTED)
-                }, {
-                    toast(it.message!!)
-                })
-            }
-        }
-
-        btnGetCards.setOnClickListener { view: View? ->
-            getFirstConnection {
-                it.getCards({
-                    Log.i("DapiResponse", it.toString())
-                    toast(RESULT_PRINTED)
-                }, {
-                    toast(it.message!!)
-                })
             }
         }
 
@@ -171,6 +122,120 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             }
         }
 
+        btnGetAccountsMetaData.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.getAccountsMetaData({
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
+
+        btnCreateTransfer.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.createTransfer(
+                    toBeneficiary = getBeneficiary()
+                )
+            }
+        }
+
+        btnCreateTransferToExistingBeneficiary.setOnClickListener { view: View? ->
+            getFirstConnection {
+                when {
+                    it.accounts.isNullOrEmpty() -> {
+                        toast(GET_ACCOUNTS_REQUIRED)
+                    }
+                    beneficiaryID == null -> {
+                        toast(GET_BENEFICIARIES_REQUIRED)
+                    }
+                    else -> {
+                        it.createTransferToExistingBeneficiary(
+                            it.accounts!!.first(),
+                            beneficiaryID!!,
+                            99.0,
+                            "Test"
+                        )
+                    }
+                }
+            }
+        }
+
+        btnGetBeneficiaries.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.getBeneficiaries({
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                    beneficiaryID = it.beneficiaries!!.first().id
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
+
+        btnCreateBeneficiary.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.createBeneficiary(getBeneficiary(), {
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
+
+        btnCreateWireTransfer.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.createWireTransfer(
+                    toBeneficiary = getWireBeneficiary()
+                )
+            }
+        }
+
+        btnCreateWireTransferToExistingBeneficiary.setOnClickListener { view: View? ->
+            getFirstConnection {
+                when {
+                    it.accounts.isNullOrEmpty() -> {
+                        toast(GET_ACCOUNTS_REQUIRED)
+                    }
+                    wireBeneficiaryID == null -> {
+                        toast(GET_BENEFICIARIES_REQUIRED)
+                    }
+                    else -> {
+                        it.createWireTransferToExistingBeneficiary(
+                            it.accounts!!.first(),
+                            wireBeneficiaryID!!,
+                            99.0,
+                            "Test"
+                        )
+                    }
+                }
+            }
+        }
+
+        btnGetWireBeneficiaries.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.getWireBeneficiaries({
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                    wireBeneficiaryID = it.beneficiaries!!.first().id
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
+
+        btnCreateWireBeneficiary.setOnClickListener { view: View? ->
+            getFirstConnection {
+                it.createWireBeneficiary(getWireBeneficiary(), {
+                    Log.i("DapiResponse", it.toString())
+                    toast(RESULT_PRINTED)
+                }, {
+                    toast(it.message!!)
+                })
+            }
+        }
 
     }
 
@@ -191,6 +256,28 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             branchAddress = "Baniyas Road Deira PO Box 777 Dubai UAE",
             branchName = "Emirates NBD Bank PJSC",
             phoneNumber = "+0585859206"
+        )
+    }
+
+    private fun getWireBeneficiary(): DapiWireBeneficiary {
+        val address = LinesAddress()
+        address.line1 = "2400 bruce street UCA stadium park bld 6"
+        address.line2 = ""
+        address.line3 = ""
+        return DapiWireBeneficiary(
+            address = address,
+            accountNumber = "1234567654321",
+            name = "TestAccount",
+            country = "US",
+            receiverType = "retail",
+            routingNumber = "953349354",
+            nickname = "OmarChase",
+            receiverAccountType = "checking",
+            firstName = "Omar",
+            lastName = "Agoor",
+            zipCode = "72305",
+            state = "Arkansas",
+            city = "Conway",
         )
 
     }
