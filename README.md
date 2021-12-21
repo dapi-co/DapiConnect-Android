@@ -17,8 +17,8 @@ You can check out our [Android Integration Guide](https://dapi-api.readme.io/doc
 ## Run The Example App
 
 1. Clone and open the project on Android Studio.
-2. Open `App.kt` and replace `APP_KEY` with your real appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
-3. Open build.gradle and replace applicationId value `com.dapi.app` with your real applicationId.
+2. Open `App.kt` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
+3. Open build.gradle and replace applicationId value `com.dapi.app` with your Bundle ID.
 4. Sync gradle and run the app.
 5. Click `Connect` button to select your bank and enter credentials to login through Dapi.
 6. After a successful connection, a DapiConnection object is generated and used for making calls to Dapi endpoints that you can call by clicking on any of the buttons like `Get Identity` and `Create Transfer`.
