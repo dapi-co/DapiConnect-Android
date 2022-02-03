@@ -252,7 +252,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             bankName = "Emirates NBD Bank PJSC",
             swiftCode = "EBILAEAD",
             iban = "AE140260000959040184901",
-            country = "UNITED ARAB EMIRATES",
+            country = "AE",
             branchAddress = "Baniyas Road Deira PO Box 777 Dubai UAE",
             branchName = "Emirates NBD Bank PJSC",
             phoneNumber = "+0585859206"

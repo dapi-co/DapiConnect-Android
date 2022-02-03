@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
                 "Emirates NBD Bank PJSC",
                 "EBILAEAD",
                 "AE140260000959040184901",
-                "UNITED ARAB EMIRATES",
+                "AE",
                 "Baniyas Road Deira PO Box 777 Dubai UAE",
                 "Emirates NBD Bank PJSC",
                 "+0585859206"
