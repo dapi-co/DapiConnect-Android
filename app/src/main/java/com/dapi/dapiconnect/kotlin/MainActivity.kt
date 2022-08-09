@@ -3,7 +3,6 @@ package com.dapi.dapiconnect.kotlin
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import co.dapi.connect.core.base.Dapi
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetIdentity.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.getIdentity({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -60,7 +59,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetAccounts.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.getAccounts({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetCards.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.getCards({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -83,7 +82,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
 
 
         btnGetTransactions.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 if (it.accounts.isNullOrEmpty()) {
                     toast(GET_ACCOUNTS_REQUIRED)
                 } else {
@@ -103,7 +102,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetTransactionsForCard.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 if (it.cards.isNullOrEmpty()) {
                     toast(GET_CARDS_REQUIRED)
                 } else {
@@ -123,7 +122,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetAccountsMetaData.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.getAccountsMetaData({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -134,7 +133,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnCreateTransfer.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.createTransfer(
                     toBeneficiary = getBeneficiary()
                 )
@@ -142,7 +141,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnCreateTransferToExistingBeneficiary.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 when {
                     it.accounts.isNullOrEmpty() -> {
                         toast(GET_ACCOUNTS_REQUIRED)
@@ -163,7 +162,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetBeneficiaries.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.getBeneficiaries({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -175,7 +174,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnCreateBeneficiary.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.createBeneficiary(getBeneficiary(), {
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -186,7 +185,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnCreateWireTransfer.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.createWireTransfer(
                     toBeneficiary = getWireBeneficiary()
                 )
@@ -194,7 +193,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnCreateWireTransferToExistingBeneficiary.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 when {
                     it.accounts.isNullOrEmpty() -> {
                         toast(GET_ACCOUNTS_REQUIRED)
@@ -215,7 +214,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnGetWireBeneficiaries.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.getWireBeneficiaries({
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -227,7 +226,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         }
 
         btnCreateWireBeneficiary.setOnClickListener { view: View? ->
-            getFirstConnection {
+            getLastConnection {
                 it.createWireBeneficiary(getWireBeneficiary(), {
                     Log.i("DapiResponse", it.toString())
                     toast(RESULT_PRINTED)
@@ -282,8 +281,14 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
 
     }
 
-    private fun getParameters(connection: DapiConnection): String =
-        connection.getParameters()
+    private fun getParameters(connection: DapiConnection) {
+        connection.getParameters({
+
+        }, {
+
+        })
+    }
+
 
     private fun createConnection(parameters: String, onCreated: (DapiConnection) -> Unit) {
         DapiConnection.create(parameters, {
@@ -293,11 +298,11 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
         })
     }
 
-    private fun getFirstConnection(firstConnection: (DapiConnection) -> Unit) {
+    private fun getLastConnection(lastConnection: (DapiConnection) -> Unit) {
         if (Dapi.isStarted) {
             Dapi.getConnections({ connections ->
                 if (connections.isNotEmpty()) {
-                    firstConnection(connections.first())
+                    lastConnection(connections.last())
                 } else {
                     toast(NO_CONNECTED_ACCOUNTS)
                 }
