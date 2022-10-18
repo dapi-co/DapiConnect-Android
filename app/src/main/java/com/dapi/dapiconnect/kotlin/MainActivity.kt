@@ -6,8 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import co.dapi.connect.core.base.Dapi
-import co.dapi.connect.core.callbacks.OnDapiConnectListener
-import co.dapi.connect.core.callbacks.OnDapiTransferListener
+import co.dapi.connect.core.callbacks.*
 import co.dapi.connect.data.endpoint_models.DapiAccountsResponse
 import co.dapi.connect.data.models.*
 import com.dapi.dapiconnect.R
@@ -15,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferListener {
+class MainActivity : AppCompatActivity(), DapiConnectCallback, DapiTransferCallback {
 
     private var beneficiaryID : String? = null
     private var wireBeneficiaryID : String? = null
@@ -38,8 +37,8 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Dapi.connectListener = this
-        Dapi.transferListener = this
+        Dapi.connectCallback = this
+        Dapi.transferCallback = this
 
         btnConnect.setOnClickListener { view: View? ->
             if (Dapi.isStarted) {
@@ -90,6 +89,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                         it.accounts!!.first(),
                         Date(System.currentTimeMillis() - MONTH_MILLIS),
                         Date(System.currentTimeMillis()),
+                        DapiTransactionsType.DEFAULT,
                         {
                             Log.i("DapiResponse", it.toString())
                             toast(RESULT_PRINTED)
@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
                         it.cards!!.first(),
                         Date(System.currentTimeMillis() - MONTH_MILLIS),
                         Date(System.currentTimeMillis()),
+                        DapiTransactionsType.DEFAULT,
                         {
                             Log.i("DapiResponse", it.toString())
                             toast(RESULT_PRINTED)
@@ -236,6 +237,25 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
             }
         }
 
+        btnPresentAccountSelection.setOnClickListener { view: View? ->
+            getLastConnection {
+                it.presentAccountSelection(object : DapiAccountSelectionCallback {
+                    override fun onDismissed() {
+                        toast("User cancelled account selection.")
+                    }
+
+                    override fun onFailure(result: DapiAccountSelectionResult.Error) {
+                        toast(result.error.message!!)
+                    }
+
+                    override fun onSelected(result: DapiAccountSelectionResult.Success) {
+                        toast(result.account.id)
+                    }
+
+                })
+            }
+        }
+
     }
 
     private fun getBeneficiary(): DapiBeneficiary {
@@ -315,16 +335,16 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
     }
 
     //Connect callbacks
-    override fun onBankRequest(bankName: String, iban: String) {
-        toast("bankName: $bankName, iban: $iban")
+    override fun onBankRequest(result: DapiConnectResult.BankRequest) {
+        toast("bankName: ${result.bankName}, iban: ${result.iban}")
     }
 
-    override fun onConnectionFailure(error: DapiError, bankID: String?) {
-        toast(error.message!!)
+    override fun onConnectionFailure(result: DapiConnectResult.Error) {
+        toast(result.error.message!!)
     }
 
-    override fun onConnectionSuccessful(connection: DapiConnection) {
-        toast("Successful connection, name:${connection.name}")
+    override fun onConnectionSuccessful(result: DapiConnectResult.Success) {
+        toast("Successful connection, name:${result.connection.name}")
     }
 
     override fun onDismissed() {
@@ -332,32 +352,22 @@ class MainActivity : AppCompatActivity(), OnDapiConnectListener, OnDapiTransferL
     }
 
     //Transfer callbacks
-    override fun onTransferFailure(account: DapiAccountsResponse.DapiAccount?, error: DapiError) {
-        toast(error.message!!)
-        if (error.type == DapiError.INVALID_CONNECTION) {
-            Dapi.presentConnect()
-        }
+    override fun onTransferFailure(result: DapiTransferResult.Error) {
+        toast(result.error.message!!)
     }
 
-    override fun onTransferSuccess(
-        account: DapiAccountsResponse.DapiAccount,
-        amount: Double,
-        reference: String?,
-        operationID: String?
-    ) {
-        toast("Successful transfer, reference: $reference")
+    override fun onTransferSuccess(result: DapiTransferResult.Success) {
+        toast("Successful transfer, reference: ${result.reference}")
     }
 
     override fun onUiDismissed() {
         toast("Transfer UI Dismissed")
     }
 
-    override fun willTransferAmount(
-        amount: Double,
-        senderAccount: DapiAccountsResponse.DapiAccount
-    ) {
-        toast("UI will send $amount")
+    override fun willTransferAmount(result: DapiTransferResult.PreTransfer) {
+        toast("UI will send ${result.amount}")
     }
+
 
     private fun toast(message: String) {
         Toast.makeText(

@@ -5,15 +5,23 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import co.dapi.connect.core.base.Dapi;
+import co.dapi.connect.core.callbacks.DapiAccountSelectionCallback;
+import co.dapi.connect.core.callbacks.DapiAccountSelectionResult;
+import co.dapi.connect.core.callbacks.DapiConnectCallback;
+import co.dapi.connect.core.callbacks.DapiConnectResult;
+import co.dapi.connect.core.callbacks.DapiTransferCallback;
+import co.dapi.connect.core.callbacks.DapiTransferResult;
 import co.dapi.connect.core.callbacks.OnDapiConnectListener;
 import co.dapi.connect.core.callbacks.OnDapiTransferListener;
 import co.dapi.connect.data.endpoint_models.DapiAccountsResponse;
 import co.dapi.connect.data.models.DapiBeneficiary;
 import co.dapi.connect.data.models.DapiConnection;
 import co.dapi.connect.data.models.DapiError;
+import co.dapi.connect.data.models.DapiTransactionsType;
 import co.dapi.connect.data.models.DapiWireBeneficiary;
 import co.dapi.connect.data.models.LinesAddress;
 
@@ -31,7 +39,7 @@ import static com.dapi.dapiconnect.kotlin.MainActivity.GET_CARDS_REQUIRED;
 import static com.dapi.dapiconnect.kotlin.MainActivity.MONTH_MILLIS;
 import static com.dapi.dapiconnect.kotlin.MainActivity.RESULT_PRINTED;
 
-public class MainActivity extends AppCompatActivity implements OnDapiConnectListener, OnDapiTransferListener {
+public class MainActivity extends AppCompatActivity implements DapiConnectCallback, DapiTransferCallback {
 
     private String beneficiaryID;
     private String wireBeneficiaryID;
@@ -56,10 +64,11 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
         Button btnCreateWireTransferToExistingBeneficiary = findViewById(R.id.btnCreateWireTransferToExistingBeneficiary);
         Button btnGetWireBeneficiaries = findViewById(R.id.btnGetWireBeneficiaries);
         Button btnCreateWireBeneficiary = findViewById(R.id.btnCreateWireBeneficiary);
+        Button btnPresentAccountSelection = findViewById(R.id.btnPresentAccountSelection);
 
 
-        Dapi.setConnectListener(this);
-        Dapi.setTransferListener(this);
+        Dapi.setConnectCallback(this);
+        Dapi.setTransferCallback(this);
 
         btnConnect.setOnClickListener((view) -> {
             if (Dapi.isStarted()) {
@@ -111,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
                 if (connection.getAccounts() == null || connection.getAccounts().isEmpty()) {
                     toast(GET_ACCOUNTS_REQUIRED);
                 } else {
-                    connection.getTransactions(connection.getAccounts().get(0), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS), (transactions) -> {
+                    connection.getTransactions(connection.getAccounts().get(0), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS), DapiTransactionsType.ENRICHED, (transactions) -> {
                         Log.i("DapiResponse", transactions.toString());
                         toast(RESULT_PRINTED);
                         return null;
@@ -129,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
                 if (connection.getCards() == null || connection.getCards().isEmpty()) {
                     toast(GET_CARDS_REQUIRED);
                 } else {
-                    connection.getTransactions(connection.getCards().get(0), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS), (transactions) -> {
+                    connection.getTransactions(connection.getCards().get(0), new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis() - MONTH_MILLIS), DapiTransactionsType.CATEGORIZED, (transactions) -> {
                         Log.i("DapiResponse", transactions.toString());
                         toast(RESULT_PRINTED);
                         return null;
@@ -254,6 +263,27 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
                 });
             });
         });
+
+        btnPresentAccountSelection.setOnClickListener((view -> {
+            getFirstConnection((connection -> {
+                connection.presentAccountSelection(new DapiAccountSelectionCallback() {
+                    @Override
+                    public void onSelected(@NonNull DapiAccountSelectionResult.Success result) {
+                        toast(result.getAccount().getId());
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull DapiAccountSelectionResult.Error result) {
+                        toast(result.getError().getMessage());
+                    }
+
+                    @Override
+                    public void onDismissed() {
+
+                    }
+                });
+            }));
+        }));
     }
 
     private DapiBeneficiary getBeneficiary() {
@@ -313,14 +343,28 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
         }
     }
 
+
+    private void toast(String message) {
+        Toast.makeText(
+                this,
+                message,
+                Toast.LENGTH_LONG
+        ).show();
+    }
+
     //Connect callbacks
     @Override
-    public void onConnectionSuccessful(@NotNull DapiConnection connection) {
+    public void onBankRequest(@NonNull DapiConnectResult.BankRequest bankRequest) {
 
     }
 
     @Override
-    public void onConnectionFailure(@NotNull DapiError error, @NotNull String bankID) {
+    public void onConnectionFailure(@NonNull DapiConnectResult.Error error) {
+
+    }
+
+    @Override
+    public void onConnectionSuccessful(@NonNull DapiConnectResult.Success success) {
 
     }
 
@@ -329,19 +373,14 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
 
     }
 
-    @Override
-    public void onBankRequest(@NotNull String bankName, @NotNull String iban) {
-
-    }
-
     //Transfer callbacks
     @Override
-    public void onTransferFailure(@Nullable DapiAccountsResponse.DapiAccount account, @NotNull DapiError error) {
+    public void onTransferFailure(@NonNull DapiTransferResult.Error error) {
 
     }
 
     @Override
-    public void onTransferSuccess(@NotNull DapiAccountsResponse.DapiAccount account, double amount, @Nullable String reference, String operationID) {
+    public void onTransferSuccess(@NonNull DapiTransferResult.Success success) {
 
     }
 
@@ -351,16 +390,8 @@ public class MainActivity extends AppCompatActivity implements OnDapiConnectList
     }
 
     @Override
-    public void willTransferAmount(double v, @NotNull DapiAccountsResponse.DapiAccount dapiAccount) {
+    public void willTransferAmount(@NonNull DapiTransferResult.PreTransfer preTransfer) {
 
-    }
-
-    private void toast(String message) {
-        Toast.makeText(
-                this,
-                message,
-                Toast.LENGTH_LONG
-        ).show();
     }
 
     private interface ConnectionCallback {
