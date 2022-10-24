@@ -6,16 +6,16 @@ import androidx.lifecycle.ViewModel
 import co.dapi.connect.core.base.Dapi
 import co.dapi.connect.core.callbacks.*
 import co.dapi.connect.data.models.*
-import com.dapi.dapiconnect.presentation.api.data.accounts.AccountsState
-import com.dapi.dapiconnect.presentation.api.data.cards.CardsState
-import com.dapi.dapiconnect.presentation.api.data.identity.IdentityState
-import com.dapi.dapiconnect.presentation.api.data.transactions.TransactionsState
-import com.dapi.dapiconnect.presentation.api.metadata.MetadataState
-import com.dapi.dapiconnect.presentation.api.payment.PaymentState
-import com.dapi.dapiconnect.presentation.api.payment.beneficiaries.BeneficiariesState
-import com.dapi.dapiconnect.presentation.api.wire.beneficiaries.WireBeneficiariesState
-import com.dapi.dapiconnect.presentation.api.payment.create_beneficiary.CreateBeneficiaryState
-import com.dapi.dapiconnect.presentation.home.HomeState
+import com.dapi.dapiconnect.api.data.accounts.AccountsState
+import com.dapi.dapiconnect.api.data.cards.CardsState
+import com.dapi.dapiconnect.api.data.identity.IdentityState
+import com.dapi.dapiconnect.api.data.transactions.TransactionsState
+import com.dapi.dapiconnect.api.metadata.MetadataState
+import com.dapi.dapiconnect.api.payment.PaymentState
+import com.dapi.dapiconnect.api.payment.beneficiaries.BeneficiariesState
+import com.dapi.dapiconnect.api.wire.beneficiaries.WireBeneficiariesState
+import com.dapi.dapiconnect.api.payment.create_beneficiary.CreateBeneficiaryState
+import com.dapi.dapiconnect.home.HomeState
 import java.util.Date
 
 class MainViewModel : ViewModel(), App.OnDapiStarted, DapiConnectCallback, DapiTransferCallback {
