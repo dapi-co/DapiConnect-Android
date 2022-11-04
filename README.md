@@ -12,7 +12,7 @@ The SDK provides direct access to Dapi endpoints and offers optional UI to manag
 
 ## Integration
 
-You can check out our [Android Integration Guide](https://dapi-api.readme.io/docs/how-to-integrate-with-android-sdk) for detailed information about our SDK.
+You can check out our [Android Integration Guide](https://docs.dapi.com/docs/android-sdk-installation) for detailed information about our SDK.
 
 ## Run The Example App
 
