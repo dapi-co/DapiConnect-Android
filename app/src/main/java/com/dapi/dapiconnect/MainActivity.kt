@@ -8,11 +8,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.AppNavigation
 import com.dapi.dapiconnect.theme.AppTheme
-import com.dapi.dapiconnect.theme.appColors
-
 
 class MainActivity : ComponentActivity() {
 
@@ -22,7 +19,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.appColors.background
+                    color = MaterialTheme.colors.background
                 ) {
                     AppNavigation(viewModel = viewModel())
                 }

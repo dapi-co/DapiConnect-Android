@@ -13,7 +13,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.api.common.ResponseItem
-import com.dapi.dapiconnect.theme.appColors
 
 @Composable
 fun MetadataScreen(viewModel: MainViewModel) {
@@ -57,7 +56,7 @@ fun MetadataScreen(viewModel: MainViewModel) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(
                 text = state.error,
-                color = MaterialTheme.appColors.error,
+                color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import co.dapi.connect.data.models.DapiConnection
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
-import com.dapi.dapiconnect.theme.appColors
 
 @Composable
 fun DapiConnectionItem(
@@ -41,7 +40,7 @@ fun DapiConnectionItem(
             shape = RoundedCornerShape(12.dp),
             border = BorderStroke(
                 width = 2.dp,
-                color = MaterialTheme.appColors.secondaryBackground
+                color = MaterialTheme.colors.onPrimary
             ),
             modifier = Modifier
                 .width(72.dp)
@@ -64,7 +63,7 @@ fun DapiConnectionItem(
 
         Text(
             text = connection.name,
-            color = MaterialTheme.appColors.onPrimary,
+            color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.h5,
             textAlign = TextAlign.Start,
             modifier = Modifier

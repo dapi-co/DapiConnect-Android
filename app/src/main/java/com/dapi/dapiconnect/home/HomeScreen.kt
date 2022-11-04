@@ -16,7 +16,6 @@ import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.Screen
 import com.dapi.dapiconnect.home.components.DapiConnectionItem
 import com.dapi.dapiconnect.api.common.MainActionButton
-import com.dapi.dapiconnect.theme.appColors
 
 @Composable
 fun HomeScreen(
@@ -45,7 +44,7 @@ fun HomeScreen(
 
         Text(
             text = "Your current connections",
-            color = MaterialTheme.appColors.primaryText,
+            color = MaterialTheme.colors.secondary,
             style = MaterialTheme.typography.h4,
             textAlign = TextAlign.Start,
             modifier = Modifier
@@ -56,7 +55,7 @@ fun HomeScreen(
         if (state.connections.isEmpty() && state.error == null) {
             Text(
                 text = "Connect your bank account to see it here.",
-                color = MaterialTheme.appColors.secondaryText,
+                color = MaterialTheme.colors.onSecondary,
                 style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

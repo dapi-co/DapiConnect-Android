@@ -17,13 +17,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dapi.dapiconnect.theme.Grey1
-import com.dapi.dapiconnect.theme.appColors
 
 @Composable
 internal fun MainActionButton(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.appColors.primary,
+    color: Color = MaterialTheme.colors.primary,
     enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
@@ -37,9 +36,9 @@ internal fun MainActionButton(
         border = BorderStroke(1.dp, color),
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.appColors.onPrimary,
+            contentColor = MaterialTheme.colors.onPrimary,
             backgroundColor = color,
-            disabledContentColor = MaterialTheme.appColors.onPrimary
+            disabledContentColor = MaterialTheme.colors.onPrimary
         )
     ) {
         Text(text = text)
@@ -50,7 +49,7 @@ internal fun MainActionButton(
 fun ResponseItem(text: String) {
     Text(
         text = text,
-        color = MaterialTheme.appColors.primaryText,
+        color = MaterialTheme.colors.secondary,
         style = MaterialTheme.typography.body1,
         textAlign = TextAlign.Start,
         modifier = Modifier
@@ -79,13 +78,13 @@ fun ResponseListItem(topLeft: String?, topRight: String?, bottomLeft: String?, b
         ) {
             Text(
                 text = topLeft.toString(),
-                color = MaterialTheme.appColors.secondaryText,
+                color = MaterialTheme.colors.onSecondary,
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.body1,
             )
             Text(
                 text = topRight.toString(),
-                color = MaterialTheme.appColors.primaryText,
+                color = MaterialTheme.colors.secondary,
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.subtitle1,
             )
@@ -100,13 +99,13 @@ fun ResponseListItem(topLeft: String?, topRight: String?, bottomLeft: String?, b
         ) {
             Text(
                 text = bottomLeft.toString(),
-                color = MaterialTheme.appColors.secondaryText,
+                color = MaterialTheme.colors.onSecondary,
                 fontSize = 12.sp,
                 style = MaterialTheme.typography.body1,
             )
             Text(
                 text = bottomRight.toString(),
-                color = MaterialTheme.appColors.secondaryText,
+                color = MaterialTheme.colors.onSecondary,
                 fontSize = 12.sp,
                 style = MaterialTheme.typography.body1,
             )
