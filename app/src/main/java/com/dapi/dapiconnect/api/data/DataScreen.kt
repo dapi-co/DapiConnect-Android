@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import co.dapi.connect.data.models.DapiTransactionsType
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.Screen
-import com.dapi.dapiconnect.home.components.MainActionButton
+import com.dapi.dapiconnect.api.common.MainActionButton
 import java.util.*
 
 @Composable

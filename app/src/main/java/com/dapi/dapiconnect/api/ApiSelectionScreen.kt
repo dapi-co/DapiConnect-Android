@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.Screen
-import com.dapi.dapiconnect.home.components.MainActionButton
+import com.dapi.dapiconnect.api.common.MainActionButton
 
 @Composable
 fun ApiSelectionScreen(viewModel: MainViewModel, navController: NavHostController) {

@@ -64,17 +64,9 @@ class MainViewModel : ViewModel(), App.OnDapiStarted, DapiConnectCallback, DapiT
         getConnections()
     }
 
-    override fun onConnectionFailure(result: DapiConnectResult.Error) {
-        _homeState.value =
-            HomeState(error = result.error.message, connections = homeState.value.connections)
-    }
+    override fun onConnectionFailure(result: DapiConnectResult.Error) {}
 
-    override fun onDismissed() {
-        _homeState.value = HomeState(
-            error = "Connect was dismissed without connecting..",
-            connections = homeState.value.connections
-        )
-    }
+    override fun onDismissed() {}
 
     override fun onBankRequest(result: DapiConnectResult.BankRequest) {}
 

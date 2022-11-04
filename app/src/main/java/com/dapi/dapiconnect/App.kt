@@ -23,8 +23,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate();
         Dapi.start(this,
-            "ce15a3407b6561da87bd847e27b2f530a6a84279d29d686b3daf60ca2f570cae",
-            "JohnDoe",
+            "APP_KEY",
+            "CLIENT_USER_ID",
             configurations = DapiConfigurations(environment = DapiEnvironment.SANDBOX),
             onSuccess = {
                 onDapiStarted?.onStarted()

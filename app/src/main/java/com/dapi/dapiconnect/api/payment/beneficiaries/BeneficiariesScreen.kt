@@ -1,4 +1,4 @@
-package com.dapi.dapiconnect.api.data.accounts
+package com.dapi.dapiconnect.api.payment.beneficiaries
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,17 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.dapi.connect.data.endpoint_models.DapiAccountsResponse
+import co.dapi.connect.data.endpoint_models.DapiBeneficiariesResponse
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.api.common.ResponseListItem
 import com.dapi.dapiconnect.theme.Grey1
 import com.dapi.dapiconnect.theme.appColors
 
 @Composable
-fun AccountsScreen(
+fun BeneficiariesScreen(
     viewModel: MainViewModel
 ) {
-    val state = viewModel.accountsState.value
+    val state = viewModel.beneficiariesState.value
 
     if (state.loading) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -32,17 +32,17 @@ fun AccountsScreen(
         }
     }
 
-    if (state.accounts != null) {
+    if (state.beneficiaries != null) {
         LazyColumn(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            items(state.accounts) { account ->
+            items(state.beneficiaries) { beneficiary ->
                 ResponseListItem(
-                    topLeft = account.name.toString(),
-                    topRight = "${account.currency?.code} ${account.balance?.amount}",
-                    bottomLeft = "${account.iban.toString().take(12)}***",
-                    bottomRight = "***${account.number.toString().takeLast(4)}"
+                    topLeft = beneficiary.name.toString(),
+                    topRight = beneficiary.type.toString(),
+                    bottomLeft = "${beneficiary.iban.toString().take(12)}***",
+                    bottomRight = "***${beneficiary.accountNumber.toString().takeLast(4)}"
                 )
             }
         }

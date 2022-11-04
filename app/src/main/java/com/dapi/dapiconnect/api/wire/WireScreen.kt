@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.Screen
-import com.dapi.dapiconnect.home.components.MainActionButton
+import com.dapi.dapiconnect.api.common.MainActionButton
 
 @Composable
 fun WireScreen(
@@ -75,7 +75,7 @@ fun WireScreen(
             )
 
             MainActionButton(
-                text = "Get Wire Beneficiaries",
+                text = "Wire Beneficiaries",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = 24.dp),

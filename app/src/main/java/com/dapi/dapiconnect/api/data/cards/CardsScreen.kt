@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.dapi.connect.data.endpoint_models.DapiCardsResponse
 import com.dapi.dapiconnect.MainViewModel
+import com.dapi.dapiconnect.api.common.ResponseListItem
 import com.dapi.dapiconnect.theme.Grey1
 import com.dapi.dapiconnect.theme.appColors
 
@@ -37,7 +38,12 @@ fun CardsScreen(
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             items(state.cards) { card ->
-                CardItem(card = card)
+                ResponseListItem(
+                    topLeft = card.name.toString(),
+                    topRight = "${card.currency?.code} ${card.balance?.availableBalance}",
+                    bottomLeft = card.status.toString(),
+                    bottomRight = "***${card.cardNumber.toString().takeLast(4)}"
+                )
             }
         }
 
@@ -54,61 +60,6 @@ fun CardsScreen(
                     .fillMaxWidth()
                     .align(Alignment.Center)
                     .padding(all = 24.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun CardItem(card: DapiCardsResponse.DapiCard) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 8.dp)
-            .background(
-                color = Grey1,
-                shape = RoundedCornerShape(8.dp)
-            )
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, top = 10.dp, end = 16.dp, bottom = 10.dp)
-        ) {
-            Text(
-                text = card.name.toString(),
-                color = MaterialTheme.appColors.secondaryText,
-                fontSize = 14.sp,
-                style = MaterialTheme.typography.body1,
-            )
-            Text(
-                text = "${card.currency?.code} ${card.balance?.availableBalance}",
-                color = MaterialTheme.appColors.primaryText,
-                fontSize = 14.sp,
-                style = MaterialTheme.typography.subtitle1,
-            )
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 16.dp, bottom = 10.dp)
-        ) {
-            Text(
-                text = card.status.toString(),
-                color = MaterialTheme.appColors.secondaryText,
-                fontSize = 12.sp,
-                style = MaterialTheme.typography.body1,
-            )
-            Text(
-                text = "***${card.cardNumber.toString().takeLast(4)}",
-                color = MaterialTheme.appColors.secondaryText,
-                fontSize = 12.sp,
-                style = MaterialTheme.typography.body1,
             )
         }
     }

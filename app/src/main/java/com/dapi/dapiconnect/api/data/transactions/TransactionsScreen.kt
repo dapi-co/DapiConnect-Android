@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.dapi.connect.data.endpoint_models.DapiTransactionsResponse
 import com.dapi.dapiconnect.MainViewModel
+import com.dapi.dapiconnect.api.common.ResponseListItem
 import com.dapi.dapiconnect.theme.Grey1
 import com.dapi.dapiconnect.theme.appColors
 
@@ -37,7 +38,12 @@ fun TransactionsScreen(
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             items(state.transactions) { transaction ->
-                TransactionItem(transaction = transaction)
+                ResponseListItem(
+                    topLeft = transaction.date.toString(),
+                    topRight = "${transaction.currency?.code} ${transaction.amount}",
+                    bottomLeft = transaction.description.toString(),
+                    bottomRight = transaction.reference.toString()
+                )
             }
         }
 
@@ -54,61 +60,6 @@ fun TransactionsScreen(
                     .fillMaxWidth()
                     .align(Alignment.Center)
                     .padding(all = 24.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun TransactionItem(transaction: DapiTransactionsResponse.DapiTransaction) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 8.dp)
-            .background(
-                color = Grey1,
-                shape = RoundedCornerShape(8.dp)
-            )
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, top = 10.dp, end = 16.dp, bottom = 10.dp)
-        ) {
-            Text(
-                text = transaction.date.toString(),
-                color = MaterialTheme.appColors.secondaryText,
-                fontSize = 14.sp,
-                style = MaterialTheme.typography.body1,
-            )
-            Text(
-                text = "${transaction.currency?.code} ${transaction.amount}",
-                color = MaterialTheme.appColors.primaryText,
-                fontSize = 14.sp,
-                style = MaterialTheme.typography.subtitle1,
-            )
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 16.dp, bottom = 10.dp)
-        ) {
-            Text(
-                text = transaction.description.toString(),
-                color = MaterialTheme.appColors.secondaryText,
-                fontSize = 12.sp,
-                style = MaterialTheme.typography.body1,
-            )
-            Text(
-                text = transaction.reference.toString(),
-                color = MaterialTheme.appColors.secondaryText,
-                fontSize = 12.sp,
-                style = MaterialTheme.typography.body1,
             )
         }
     }

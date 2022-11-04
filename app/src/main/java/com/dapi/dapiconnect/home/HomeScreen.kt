@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.Screen
 import com.dapi.dapiconnect.home.components.DapiConnectionItem
-import com.dapi.dapiconnect.home.components.MainActionButton
+import com.dapi.dapiconnect.api.common.MainActionButton
 import com.dapi.dapiconnect.theme.appColors
 
 @Composable

@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import co.dapi.connect.data.models.DapiBeneficiary
 import co.dapi.connect.data.models.LinesAddress
 import com.dapi.dapiconnect.MainViewModel
-import com.dapi.dapiconnect.home.components.MainActionButton
+import com.dapi.dapiconnect.api.common.MainActionButton
 
 @Composable
 fun CreateBeneficiaryScreen(

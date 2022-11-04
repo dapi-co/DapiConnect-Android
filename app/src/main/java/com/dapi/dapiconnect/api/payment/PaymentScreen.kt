@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.dapi.dapiconnect.MainViewModel
 import com.dapi.dapiconnect.navigation.Screen
-import com.dapi.dapiconnect.home.components.MainActionButton
+import com.dapi.dapiconnect.api.common.MainActionButton
 
 @Composable
 fun PaymentScreen(
@@ -75,7 +75,7 @@ fun PaymentScreen(
             )
 
             MainActionButton(
-                text = "Get Beneficiaries",
+                text = "Beneficiaries",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = 24.dp),

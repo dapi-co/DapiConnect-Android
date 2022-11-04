@@ -1,6 +1,5 @@
 package com.dapi.dapiconnect.api.wire.beneficiaries
 
-import co.dapi.connect.data.endpoint_models.DapiBeneficiariesResponse
 import co.dapi.connect.data.endpoint_models.DapiWireBeneficiariesResponse
 
 
