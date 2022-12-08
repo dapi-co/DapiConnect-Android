@@ -13,10 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import co.dapi.connect.data.models.DapiConnection
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 
 @Composable
@@ -29,7 +31,7 @@ fun DapiConnectionItem(
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 8.dp)
             .background(
-                color = Color(android.graphics.Color.parseColor(connection.color["primaryColor"])),
+                color = Color(android.graphics.Color.parseColor(connection.color!!["primaryColor"])),
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable {
@@ -49,11 +51,11 @@ fun DapiConnectionItem(
             elevation = 0.dp
         ) {
             Image(
-                painter = rememberImagePainter(
-                    data = connection.miniLogoPng,
-                    builder = {
-                        transformations(RoundedCornersTransformation())
-                    }),
+                painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(connection.miniLogoPng)
+                        .transformations(RoundedCornersTransformation())
+                        .build()),
                 contentDescription = "Bank Logo",
                 modifier = Modifier
                     .widthIn(64.dp, 128.dp)
