@@ -18,6 +18,7 @@ import com.dapi.dapiconnect.api.payment.create_beneficiary.CreateBeneficiaryScre
 import com.dapi.dapiconnect.api.wire.WireScreen
 import com.dapi.dapiconnect.api.wire.beneficiaries.WireBeneficiariesScreen
 import com.dapi.dapiconnect.api.wire.create_beneficiary.CreateWireBeneficiaryScreen
+import com.dapi.dapiconnect.home.ConfigurationsScreen
 import com.dapi.dapiconnect.home.HomeScreen
 
 @Composable
@@ -31,10 +32,17 @@ fun AppNavigation(
         ) {
             HomeScreen(
                 viewModel = viewModel,
-                navController = navController
-            ) {
-                viewModel.presentConnect()
-            }
+                navController = navController,
+                onConnect = {
+                    viewModel.presentConnect()
+                }
+            )
+        }
+
+        composable(
+            route = Screen.Configurations.route
+        ) {
+            ConfigurationsScreen()
         }
 
         composable(

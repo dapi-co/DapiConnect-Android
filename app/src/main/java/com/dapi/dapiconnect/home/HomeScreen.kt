@@ -81,9 +81,19 @@ fun HomeScreen(
                 text = "Connect With Dapi",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = 24.dp),
+                    .padding(start = 24.dp, end = 24.dp, top = 24.dp),
                 onClick = {
                     onConnect()
+                }
+            )
+
+            MainActionButton(
+                text = "Edit Configurations",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, end = 24.dp, bottom = 24.dp, top = 2.dp),
+                onClick = {
+                    navController.navigate(Screen.Configurations.route)
                 }
             )
 
