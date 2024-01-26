@@ -45,7 +45,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     //Dapi
-    implementation 'co.dapi:connect:2.37.3'
+    implementation 'co.dapi:connect:2.37.5'
 
     // Compose
     implementation "androidx.compose.runtime:runtime:1.4.3"
