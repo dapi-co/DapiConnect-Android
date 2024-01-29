@@ -19,7 +19,7 @@ You can check out our [Android Integration Guide](https://docs.dapi.com/docs/and
 1. Download and install [Android Studio](https://developer.android.com/studio)
 2. Clone the project `git clone https://github.com/dapi-co/DapiConnect-Android.git`
 3. Open the project in Android Studio and go to `Settings -> Build, Execution, Deployment ->  Build Tools -> Gradle -> Gradle JDK` and select `JDK 17` if not selected.
-4. Open `App.kt` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
+4. Open `App.kt` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.dapi.com/login)
 5. Open build.gradle and replace applicationId value `com.dapi.app` with your Bundle ID.
 6. Sync gradle.
 7. Run the app.
